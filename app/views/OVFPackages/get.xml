@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+    xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+    xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1"
+    xmlns="http://schemas.dmtf.org/ovf/envelope/1">
+
+	<References>
+	<!--
+		<File ovf:href="file-${ovfpackage.diskFilePath}" ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />
+	-->
+		<File ovf:href="@@{OVFPackages.getRepository(ovfpackage.diskFilePath)}" ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />		
+	</References>
+	
+	<DiskSection>
+		<Info>List of Virtual Disks</Info>
+		<Disk 
+			ovf:fileRef="file1"
+			ovf:diskId="disk1" 
+			ovf:capacity="${ovfpackage.hdInBytes}"
+			ovf:format="${ovfpackage.diskFileFormat.url}" />
+	</DiskSection>
+	
+	
+	<VirtualSystem ovf:id="${ovfpackage.name}">
+		<Info>A virtual machine</Info>
+		
+	  	<ProductSection>
+	    	<Info>${ovfpackage.name}</Info>
+            <Product>${ovfpackage.name}</Product>
+            <Icon ovf:fileRef="${ovfpackage.iconPath}" ovf:mimeType="image/jpeg" ovf:width="32" ovf:height="32" />        
+       	</ProductSection>
+	
+		<VirtualHardwareSection>
+			<System>
+				<vssd:VirtualSystemType>abiquo</vssd:VirtualSystemType>
+			</System>
+			<Item>
+				<rasd:Caption>${ovfpackage.cpu} virtual CPUs</rasd:Caption>
+				<rasd:Description>Number of virtual CPUs</rasd:Description>
+				<rasd:InstanceId>1</rasd:InstanceId>
+				<rasd:ResourceType>3</rasd:ResourceType>
+				<rasd:VirtualQuantity>${ovfpackage.cpu}</rasd:VirtualQuantity>
+			</Item>
+			<Item>
+				<rasd:Caption>${ovfpackage.ram} ${ovfpackage.ramSizeUnit} of memory RAM</rasd:Caption>
+				<rasd:Description>Memory Size</rasd:Description>
+				<rasd:InstanceId>2</rasd:InstanceId>
+				<rasd:ResourceType>4</rasd:ResourceType>
+				<rasd:AllocationUnits>${ovfpackage.ramSizeUnit}</rasd:AllocationUnits>
+				<rasd:VirtualQuantity>${ovfpackage.ram}</rasd:VirtualQuantity>
+			</Item>
+			<Item>
+				<rasd:Caption>Harddisk 0</rasd:Caption>
+				<rasd:InstanceId>11</rasd:InstanceId>
+				<rasd:ResourceType>17</rasd:ResourceType>
+				<rasd:HostResource>ovf:/disk/disk1</rasd:HostResource>
+			</Item>
+		</VirtualHardwareSection>
+	</VirtualSystem>
+</Envelope>

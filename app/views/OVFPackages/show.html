@@ -1,0 +1,23 @@
+#{extends 'OVFPackages/layout.html' /}
+
+<div id="crudShow" class="${type.name}">
+	<!--
+	<h2 id="crudShowTitle">Edit</h2>	
+	
+	-->
+	<div class="crudDelete" style="align: right;">
+		#{form @delete(object._key())}
+			<input type="submit" value="&{'crud.delete', type.modelName}" />
+		#{/form}
+	</div>
+
+	#{form action:@save(object._key()), enctype:'multipart/form-data'}
+		#{ovfform object:object /}
+
+		<p class="crudButtons">
+			<input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+			<input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+		</p>
+	#{/form}	
+</div>
+

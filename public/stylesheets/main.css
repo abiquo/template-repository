@@ -1,0 +1,72 @@
+*{
+	/* A universal page reset */
+	margin:0;
+	padding:0;
+}
+
+body{
+    padding-bottom: 20px;
+    background: #414141 url(http://abiquo.com/images/background-page.png) center top no-repeat;
+    
+    - font: 31pt/31pt arial, sans-serif;
+
+	/* Setting default text color, background and a font stack */
+	font-size:14px;
+	color:#fcfcfc;
+	- background-color:#0d4362;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+#main,
+a.button{
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+}
+
+/* Styling the big button */
+
+a.button,
+a.button:visited,
+a.button:active{
+	color:white;
+	letter-spacing:-2px;
+	padding:20px;
+	display:block;
+	text-shadow:1px 2px 0 black;
+	font-family:'Myriad Pro',Arial,Helvetica,sans-serif;
+	font-size:30px;
+	font-weight:bold;
+	text-align:center;
+	width:350px;
+	border:2px solid black;
+	margin:60px auto;
+	
+	/*
+		CSS3 gradients for webkit and mozilla browsers,
+		fallback color for the rest:
+	*/
+	
+	background-color: #F90;
+-	background-image: -moz-linear-gradient(#F90, #4f9cca);
+-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F90), to(#FF0000));
+}
+
+
+a.button:hover{
+	text-decoration:none;
+	background-color: #F90;
+	background-image: -moz-linear-gradient(#F90, #FF0000);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F90), to(#FF0000));
+}
+
+
+a, a:visited {
+	color:#0196e3;
+	text-decoration:none;
+	outline:none;
+}
+
+a:hover{
+	text-decoration:underline;
+}

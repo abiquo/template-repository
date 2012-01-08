@@ -1,0 +1,10 @@
+.project
+.classpath
+.settings
+target
+test-output
+tmp
+*~
+eclipse/
+precompiled/
+db/

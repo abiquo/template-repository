@@ -1,0 +1,425 @@
+/** Administration area **/
+
+body {
+    padding-bottom: 20px;
+    background: #414141 url(http://abiquo.com/images/background-page.png) center top no-repeat;
+    
+    font: 31pt/31pt arial, sans-serif;
+}
+
+#ovfUrl {
+		color:black; 
+		font: bold 84%; 
+		font-size:15px; 
+		border-radius:10px; 
+		background-color:#F90; 
+		border:2px solid black;
+}
+#diskFile {
+		color:black; 
+		font: bold 84%; 
+		font-size:15px; 
+		border-radius:10px; 
+		background-color:#F90; 
+		border:2px solid black;
+}
+
+
+
+#startButton input {
+	- margin: 0;
+	- position: absolute;
+	- top: 0;
+	- right: 50;
+	float: right;
+	background: #54BD06;
+	padding: 3px 10px;
+	font-size: 90%;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	color: #fff !important;
+	text-decoration: none;
+}
+
+
+
+#crud {
+	margin: 0;
+	padding: 0;
+	font-size: 90%;
+
+	font-family: 'Arial';
+    font: sans-serif;
+
+
+	color: #F90;
+}
+
+/** Header **/
+
+#crud #crudHeader {
+	background: #111111;
+	padding: 10px 20px;
+}
+
+#crud #crudHeader h1 {
+	margin: 0;
+	font-weight: normal;
+}
+
+#crud #crudHeader h1 a {
+	color: gold;
+	text-decoration: none;
+}
+
+
+
+#crudListAdd {
+aling: right;
+display: inline;
+- padding: 5px 100px;
+ float: right;	
+}
+
+
+
+
+/** Breadcrumb **/
+
+#crudBreadcrumb {
+	padding: 5px 20px;
+	font-size: 80%;
+	border-bottom: 1px solid #ddd;
+	float: right;
+}
+
+#crudBreadcrumb ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#crudBreadcrumb li {
+	display: inline;
+}
+
+#crudBreadcrumb a {
+	color: white;
+}
+
+#crudBreadcrumb li:last-child a {
+	color: #888;
+	text-decoration: none;
+}
+
+/** Flash message **/
+
+.crudFlash {
+	padding: 5px 20px;
+	border-bottom: 1px solid #ddd;
+	color: #fff;
+}
+
+.flashError {
+	background: #c00;
+}
+
+.flashSuccess {
+	background: #54BD06;
+}
+
+/** Content **/
+
+#crud #crudContent {
+	padding: 10px 20px;
+}
+
+#crud #crudContent h2 {
+	color: #F90;
+	font-weight: normal;
+	margin-top: 10px;
+}
+
+#crud #crudContent a {
+	color: white;	
+}
+
+/** Tables **/
+
+#crud #crudContent table {
+	width: 100%;
+	border: 1px solid #ddd;
+	border-top: none;
+	border-collapse: collapse;
+}
+
+#crud #crudContent table thead tr {
+	background: #F90;
+}
+
+#crud #crudContent table th {
+	color:black;
+	font-weight: bold;
+}
+
+#crud #crudContent table th a {
+	color: black;
+	font-weight: bold;
+}
+
+#crud #crudContent table th {
+	text-align: left;
+	padding: 6px 5px;
+}
+
+#crud #crudContent table td {
+	text-align: left;
+	padding: 4px 5px;
+}
+
+#crud #crudContent table td {
+	border-bottom: 1px solid #eee;
+}
+
+#crud #crudContent table tr.even {
+	background: black;
+}
+
+#crud #crudContent table tr:last-child td {
+	border-bottom: 1px solid #ddd;
+}
+
+.crudSortedAsc:after {
+	content: '▼';
+}
+
+.crudSortedDesc:after {
+	content: '▲';
+}
+
+/** Forms **/
+
+form {
+	margin: 0;
+}
+
+input, textarea, select {
+	font-family: 'Helvetica', 'Arial', 'Sans';
+	font-size: 15px;
+}
+
+textarea {
+	padding: 2px;
+}
+
+.objectForm {
+	border: 1px solid #ddd;
+}
+
+label {
+
+	color: white;
+	font-size: 20px;
+	display: block;
+	- font-weight: bold;
+	width: 20%;
+	float: left;
+	cursor: pointer;
+}
+
+.crudField {
+	- padding: 10px;
+	- border-bottom: 1px solid #eee;
+	- position: relative;
+}
+
+.crud_hidden {
+    display: none;
+}
+
+.crudButtons {
+	background: #efefef;
+	text-align: right;
+	margin: 0;
+	padding: 10px;
+}
+
+.crudField .error {
+	color: #c00;
+	padding-left: 10px;
+	position: right;
+	- top: 15px;
+	font-size: 80%;
+}
+
+.crudField .hasError {
+	color: #c00;
+}
+
+.crudField select[multiple] {
+	max-height: 100px;
+}
+
+.crudField .crudHelp {
+	font-size: 50%;
+	color: #888;
+   - display: block;
+	margin-left: 0%;
+	margin-top: 5px;
+}
+
+form .currentAttachment {
+	display: block;
+	font-size: 80%;
+	margin-left: 20%;
+	padding-top: 4px;
+}
+
+form .removeAttachment {
+    display: block;
+    font-size: 80%;
+    margin-left: 20%;
+}
+
+/** Footer **/
+
+#crud #crudFooter {
+	font-size: 80%;
+	color: #aaa;
+	padding: 10px 20px;
+	border-top: 1px dashed #ccc;
+	border-bottom: 1px dashed #ccc;
+	margin-top: 20px;
+}
+
+#crud #crudFooter a {
+	color: #F90;
+}
+
+/** Home **/
+
+.crudNew {
+	text-align: right !important;
+}
+
+.crudNew a {
+	background: #54BD06;
+	padding: 2px 10px;
+	font-size: 90%;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	color: #fff !important;
+	text-decoration: none;
+}
+
+.crudNew a:hover {
+	opacity: .8;
+}
+
+/** List **/
+
+#crudList {
+	position: relative;
+}
+
+#crudListAdd a {
+	- margin: 0;
+	- position: absolute;
+	- top: 0;
+	- right: 0;
+	background: #54BD06;
+	padding: 3px 10px;
+	font-size: 90%;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	color: #fff !important;
+	text-decoration: none;
+}
+
+#crudListAdd a:hover {
+	opacity: .8;
+}
+
+#crudListSearch {
+	padding: 4px 5px;
+	border: 1px solid #ddd;
+	background: #efefef;
+}
+
+#crudListSearch input[type=text] {
+	width: 40%;
+}
+
+#crudListSearch a {
+	color: #111 !important;
+	font-size: 90%;
+}
+
+#crudListPagination {
+	padding: 4px 5px;
+	border: 1px solid #ddd;
+	background: #F90;
+	border-top: 0;
+	font-size: 90%;
+	position: relative;
+}
+
+#crudListPagination .crudCount {
+	margin: 0;
+}
+
+#crudListPagination .crudPages {
+	margin: 0;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+
+/** Show **/
+
+#crudShow {
+	position: relative;
+}
+
+.crudDelete input {
+	color: #fff;
+	border: none;
+	margin: 0;
+	- position: absolute;
+	- top: 0;
+	- right: 0;
+	align:right;
+	background: #c00;
+	- padding: 2px 10px;
+	font-size: 90%;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	cursor: pointer;
+}
+
+.crudDelete input:hover {
+	opacity: .7;
+}
+
+
+
+button {
+  background: #333 url(http://abiquo.com/images/logo-abiquo.png) center top no-repeat;
+   border: none;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   -khtml-border-radius: 5px;
+   border-radius: 30px;
+  color: #ffffff;
+  display: block;
+  font: 18px Georgia, "Times New Roman", Times, serif;
+  letter-spacing: 1px;
+   padding: 27px 130px;
+ text-shadow: 0 1px 1px #000000;
+ }
+button:hover {
+background: #000000 url(http://abiquo.com/images/logo-abiquo.png) center top no-repeat;
+cursor: pointer;
+}
+
+

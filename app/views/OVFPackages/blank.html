@@ -1,0 +1,141 @@
+#{extends 'OVFPackages/layout.html' /}
+
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/progress.css'}" />
+
+
+<script type="text/javascript" src="@{'/public/javascripts/upload.js'}" charset="utf-8"></script> 
+
+
+<script type="text/javascript">
+
+	function fileSelected()
+	{
+		var file = document.getElementById('diskFile').files[0];
+        
+        if (file)
+        {
+          	document.getElementById('object_name').value = file.name;
+			document.getElementById('object_diskFilePath').value = file.name;
+			document.getElementById('object_diskFileSize').value = file.size;			
+			
+	        // display the form
+	        document.getElementById('objectForm').style.display = 'block';
+	        document.getElementById('startButton').style.display = 'block';
+	        
+	        document.getElementById('autofill').style.display = 'none';	    
+	        document.getElementById('guessDiskId').style.display = 'none';	    
+        }
+        else
+		{        	
+    		document.getElementById("uploadFlashFail").style.display= 'block';
+			document.getElementById("uploadFlashFail").innerHTML= "Any file selected";		
+		}
+	} 
+      
+      
+	
+	function urlSelected()
+	{
+
+		alert('selected');
+		
+		var url = document.getElementById('ovfUrl').value;
+
+
+		document.getElementById("uploadFlashSuccess").style.display= 'block';
+		document.getElementById("uploadFlashSuccess").innerHTML= 'checking file'; 
+
+		  
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("HEAD", url,true);
+		xmlHttp.onreadystatechange = function()
+		{
+			if (xmlHttp.status==200 && (xmlHttp.readyState >=3 || xmlHttp.readyState=="complete"))
+        	{
+            	//&& xmlHttp.readyState >=3
+        		document.getElementById("uploadFlashSuccess").style.display= 'none';
+
+        		
+				var fileSize = xmlHttp.getResponseHeader("Content-Length");
+				var fileName = url.substring(url.lastIndexOf('/')+1, url.length);
+
+		        // display the form
+		        document.getElementById('objectForm').style.display = 'block';
+		        document.getElementById('startButton').style.display = 'block';
+		        
+		        document.getElementById('autofill').style.display = 'none';	  
+
+		        
+		      	document.getElementById('object_name').value = fileName;
+				document.getElementById('object_diskFilePath').value = url;
+				document.getElementById('object_diskFileSize').value = fileSize;
+				
+			}
+			else
+
+				 if (xmlHttp.status != 0 && xmlHttp.readyState >=3)
+        	{
+        		//document.getElementById("uploadFlashSuccess").style.display= 'none';
+
+        		document.getElementById("uploadFlashFail").style.display= 'block';
+				document.getElementById("uploadFlashFail").innerHTML= xmlHttp.statusText;         		
+        	}
+		}
+	
+		xmlHttp.send(null);
+ 
+	}
+            
+</script>
+
+
+    <!-- Progress bar --> 
+    <div id="progress_bar" class="ui-progress-bar ui-container" style="display: none;"> 
+      <div id="ui-progress" class="ui-progress" style="width: 0%;">
+      </div>       
+
+	</br>
+	
+    <div id="progess100" style="display: none;">
+		Processing on server
+    </div>
+	
+    </div> 
+
+    
+
+
+<div id="crudBlank" class="${type.name}">
+	<!--  UPLOAD USING FILE -->
+	<div class="uploadOption" id="fileOption" style="float: left;">
+		<input id="diskFile" type="file" name="diskFile"  
+		onchange="fileSelected();" value="Enter local file path"/>
+		local source
+	</div>
+
+	<!--  UPLOAD USING URL	
+	<div class="uploadOption" id="urlOption" style="float: right;">
+			<input id="ovfUrl" type="text" name="diskUrl"
+				onChange="urlSelected();" value="Enter a file URL"/>				
+			remote source 		
+	</div>	
+	 -->
+	 </br>
+
+
+
+<form enctype="multipart/form-data" method="post" id="objectFormData">
+	<div id="objectForm"  style="display: none;">
+		#{ovfform object:object /}
+	</div>
+</form>
+	</br>
+	
+	<div class="startButton" id="startButton" style="display: none;">
+		<input type="button" onclick="startCreateOVF();" value="Create Template"/>
+	</div>	
+</div><!-- crud_blank -->
+
+
+	</br>
+	</br>

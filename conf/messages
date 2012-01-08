@@ -1,0 +1,17 @@
+# You can specialize this file for each language.
+# For example, for French create a messages.fr file
+#
+
+ovfUrl = URL
+name = Package name
+description = Package description
+diskFilePath = Path to the local disk file
+diskFileFormat = Disk file format
+diskFileSize = Disk file size (bytes)
+cpu = Required CPU
+ram = Required RAM
+hd = Required HD
+ramSizeUnit = RAM units
+hdSizeUnit = HD units
+iconPath = Icon URL
+categoryName = Category

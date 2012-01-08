@@ -1,0 +1,21 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                      		OVFPackages.list
+GET		/ovfindex.xml								OVFPackages.ovfindex(format:'xml')
+GET     /{name}/desc.ovf							OVFPackages.getByName(format:'xml')
+GET		/vm_repository/{diskFilePath}				OVFPackages.getRepository
+
+POST   	/createOvf									OVFPackages.createOvf
+
+
+
+# Map static resources from the /app/public folder to the /public path
+*		/public/									staticDir:public
+*		/admin              						module:crud
+*		/											module:secure
+
+# Catch all
+*       /{controller}/{action}                   	 {controller}.{action}

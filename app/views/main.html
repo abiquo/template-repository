@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${lang}" lang="${lang}">
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    	<link href="@{'/public/stylesheets/crud.css'}" 	rel="stylesheet" 	type="text/css" media="screen" />
+        <link href="@{'/public/images/favicon.ico'}" 	rel="shortcut icon" type="image/png">
+        
+        <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" 	type="text/javascript" charset="utf-8"></script>        
+        <script src="@{'/public/javascripts/upload.js'}" 			type="text/javascript" charset="utf-8"></script> 
+    </head>
+    
+
+    <body>
+    	<div id="crudHeader">
+    	<h1><a href="@{OVFPackages.list()}">Template Repository</a></h1>
+    	<!--
+			<h1><a href="@{OVFPackages.ovfindex()}">Template Repository</a></h1>
+		    #{navigation /}
+        -->
+        #{if session.get("user") != "notauthenticatedId"}            
+            ${session.get("username")}
+        #{/if}
+        </div>
+    
+        <div id="main">
+	    	#{doLayout /}
+		</div>
+    
+		<div id="crudFooter">
+			<a href="http://github.com/abiquo/template-repository/issues">report issue</a>
+		</div>
+    </body>
+</html>
