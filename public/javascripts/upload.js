@@ -17,7 +17,7 @@ function formatChange(format)
 	}
 }
 
-function startCreateOVF() {
+function startCreateOVF(createUrl) {
 
 	document.getElementById("progress_bar").style.display= 'block';
 	document.getElementById('crudBlank').style.display = 'none';            
@@ -37,7 +37,7 @@ function startCreateOVF() {
 	xhr.addEventListener("error", uploadFailed, false);
 	xhr.addEventListener("abort", uploadCanceled, false);
 
-	xhr.open("POST", "/createOvf");
+	xhr.open("POST", createUrl);
 
 	if (window.FormData) {
 		//XXX not compatible with old Chrome versions
