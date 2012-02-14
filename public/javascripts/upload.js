@@ -25,11 +25,11 @@ function startCreateOVF(createUrl) {
     
 	var diskFile = document.getElementById('diskFile').files[0];
 
-	if (!diskFile) 
-	{
-		document.getElementById("uploadFlashFail").style.display= 'block';
-		document.getElementById("uploadFlashFail").innerHTML= "you browser is not supported, use Chrome.";		
-	}
+	//if (!diskFile) 
+	//{
+	//	document.getElementById("uploadFlashFail").style.display= 'block';
+	//	document.getElementById("uploadFlashFail").innerHTML= "you browser is not supported, use Chrome.";		
+	//}
 
 	var xhr = new XMLHttpRequest();
 	xhr.upload.addEventListener("progress", uploadProgress, false);
@@ -59,8 +59,11 @@ function startCreateOVF(createUrl) {
 		fd.append("object.iconPath",document.getElementById('object_iconPath').value);
 		
 
-		
-		fd.append("diskFile", diskFile);
+		if(diskFile)
+		{
+			fd.append("diskFile", diskFile);			
+		}
+
 
 		xhr.send(fd);
 	}

@@ -217,6 +217,10 @@ public class OVFPackage extends Model
     }
     
     
+    public boolean isDiskUrl()
+    {
+        return diskFilePath.startsWith("http://");
+    }
 
 
 }

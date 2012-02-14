@@ -6,10 +6,13 @@
     xmlns="http://schemas.dmtf.org/ovf/envelope/1">
 
 	<References>
-	<!--
-		<File ovf:href="file-${ovfpackage.diskFilePath}" ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />
-	-->
-		<File ovf:href="@@{OVFPackages.getRepository(ovfpackage.diskFilePath)}" ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />		
+	#{if ovfpackage.isDiskUrl() }
+		<File ovf:href="${ovfpackage.diskFilePath}" 
+	#{/if}
+	#{else}
+		<File ovf:href="@@{OVFPackages.getRepository(ovfpackage.diskFilePath)}"
+	#{/else}
+		ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />		
 	</References>
 	
 	<DiskSection>

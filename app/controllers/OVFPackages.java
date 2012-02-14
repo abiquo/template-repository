@@ -5,8 +5,11 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.UUID;
 
 import models.OVFPackage;
 import models.OVFPackage.DiskFormatType;
@@ -46,11 +49,11 @@ public class OVFPackages extends CRUD
         .appendDayOfMonth(2).appendLiteral('-')//
         .appendMillisOfDay(8).toFormatter();
 
-    public static void createOvf(final OVFPackage object, final File diskFile)
+    
+    
+    private static void createTemplateFromDiskUrl(final OVFPackage object)
     {
         final String timestamp = new DateTime().toString(TIME_FORMATTER);
-
-        object.user = session.get("username");
 
         String absPath = null;
 
@@ -61,7 +64,102 @@ public class OVFPackages extends CRUD
             // TODO also in save
 
             // check name is unique or append time-stamp
+            if (OVFPackage.find("name", object.name).first() != null)
+            {
+                object.name = object.name + timestamp;
+            }
 
+            URL diskUrl = new URL(object.diskFilePath);
+
+            object.diskFileSize = Long.valueOf(WS.url(object.diskFilePath).head().getHeader("Content-Length"));
+                
+//            InputStream fis = WS.url(object.diskFilePath).get().getStream();
+            InputStream fis = diskUrl.openStream();
+            DiskId diskId = useDiskId(headFile(fis));
+
+            object.diskFileFormat = diskId.type;
+            object.hd = (long) diskId.hd; // FIXME double round
+            object.hdSizeUnit = object.hdSizeUnit;
+            object.hdInBytes = OVFPackage.hdInBytes(object.hd, object.hdSizeUnit);
+
+            play.Logger.info("DiskID guess %s\t %d\t %s", object.diskFileFormat.name(), object.hd,
+                object.hdSizeUnit.name());
+
+            validation.valid(object);
+            if (validation.hasErrors())
+            {
+                play.Logger.error("Can't create template %s\t %s\t %s\n%s", object.id, object.name,
+                    object.diskFilePath, validation.errorsMap().toString());
+                response.status = 500;
+                renderText("Can't validate Template attributes"+validation.errorsMap().toString());
+                return;
+
+            }
+            object._save();
+
+            // object = object.save();
+            play.Logger.info("Template %s\t %s\t %s", object.id, object.name, object.diskFilePath);
+        }
+        catch (Exception e)
+        {
+            play.Logger.error(e, "Template %s FAIL ", object.name);
+            e.printStackTrace();
+
+            object._delete();
+            try
+            {
+                new File(absPath).delete();
+            }
+            catch (Exception ed)
+            {
+            }
+
+            response.status = 500;
+            renderText(e.getMessage());
+        }
+    }
+    
+    private static String urlSelected(final String url)
+    {
+        if(url.startsWith("http://"))
+        {
+            return url;
+        }
+        else if(url.contains("/"))
+        {
+            return "http://"+url;
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    public static void createOvf(final OVFPackage object, final File diskFile)
+    {
+
+        final String timestamp = new DateTime().toString(TIME_FORMATTER);
+
+        object.user = session.get("username");
+
+        String url = urlSelected(object.diskFilePath);
+        if(url!=null)
+        {
+            object.diskFilePath = url;
+            createTemplateFromDiskUrl(object);
+            return;
+        }
+        
+        
+        String absPath = null;
+
+        try
+        {
+            // remove extension from default name (file name)
+            object.name = URLEncoder.encode(FilenameUtils.getBaseName(object.name), "UTF-8");
+            // TODO also in save
+
+            // check name is unique or append time-stamp
             if (OVFPackage.find("name", object.name).first() != null)
             {
                 object.name = object.name + timestamp;
@@ -137,18 +235,21 @@ public class OVFPackages extends CRUD
         OVFPackage object = OVFPackage.findById(Long.valueOf(id));
         notFoundIfNull(object);
 
-        try
+        if(!object.isDiskUrl())
         {
-            File diskFile = new File(getRepositoryLocation() + object.diskFilePath);
-            diskFile.delete();
+            try
+            {
+                File diskFile = new File(getRepositoryLocation() + object.diskFilePath);
+                diskFile.delete();
 
+            }
+            catch (Exception e)
+            {
+                flash.error(Messages.get("crud.delete.error", "OVFPackage"));
+                redirect(request.controller + ".show", object._key());
+            }            
         }
-        catch (Exception e)
-        {
-            flash.error(Messages.get("crud.delete.error", "OVFPackage"));
-            redirect(request.controller + ".show", object._key());
-        }
-
+        
         try
         {
             object._delete();
@@ -182,7 +283,12 @@ public class OVFPackages extends CRUD
     }
 
     public static void getRepository(final String diskFilePath)
-    {
+    {        
+//        if(diskFilePath.startsWith("http://"))
+//        {
+//            redirect(diskFilePath);
+//        }
+//        
         File diskFile = new File(FilenameUtils.concat(getRepositoryLocation(), diskFilePath));
 
         play.Logger.info("file : %s", diskFilePath);
@@ -225,7 +331,7 @@ public class OVFPackages extends CRUD
     {
 
         HttpResponse resp =
-            WS.url(getDiskIdUrl()).files(new FileParam(headFile(diskFile), "chunk")).post();
+            WS.url(getDiskIdUrl()).files(new FileParam(headFile(new FileInputStream(diskFile)), "chunk")).post();
 
         if (resp.getStatus() != 200)
         {
@@ -235,12 +341,15 @@ public class OVFPackages extends CRUD
         }
 
         JsonObject diskId = resp.getJson().getAsJsonObject();
+        
         String format = diskId.get("format").getAsString();
         String variant = "no_variant";
         try
         {
             variant = diskId.get("variant").getAsString();
+            
             variant = variant.replaceAll("streamOptimized", "stream_Optimized");
+            variant = variant.replaceAll("monolithic", "");
         }
         catch (Exception e)
         {
@@ -273,21 +382,21 @@ public class OVFPackages extends CRUD
 
     private static String getDiskIdUrl()
     {
-        return Play.configuration.getProperty("", DISK_ID_URL_DEFAULT);
+        return Play.configuration.getProperty("ovfcatalog.diskIdUrl", DISK_ID_URL_DEFAULT);
     }
 
     private final static int REQUIRED_LINES = 20;
 
-    private static File headFile(final File inFile)
+    private static File headFile(final InputStream inputstream)
     {
         File outFile = null;
         DataInputStream in = null;
         DataOutputStream out = null;
         try
         {
-            outFile = File.createTempFile(inFile.getName(), "head");
+            outFile = File.createTempFile(UUID.randomUUID().toString(), "head");
             out = new DataOutputStream(new FileOutputStream(outFile));
-            in = new DataInputStream(new FileInputStream(inFile));
+            in = new DataInputStream(inputstream);
 
             byte[] line = new byte[1024];
 
