@@ -207,11 +207,9 @@ selected="${_object.ramSizeUnit}='TB'"
 			#{else}
 				<span class="crudHelp"> Numeric. </span>				
 			#{/else}
-				
 		</div>
-		
 
-<div id="guessDiskId">		
+	<div id="guessDiskId">		
 		<div class="crudField">
 			<label for="object_hd">
 				Hard Disk
@@ -226,7 +224,29 @@ selected="${_object.ramSizeUnit}='TB'"
 				<option name="TB" ord="4" value="TB"     ${_object.hdSizeUnit.ordinal()==4 ? "selected" : ""}>TB</option>
 			</select>
 		</div>
-</div>				
+	</div>				
+
+		<div class="crudField crud_enum">
+			<label for="object_ethernetDriver">
+				Ethernet Driver
+		    </label>
+		
+			<select id="object_ethernetDriver" name="object.ethernetDriver" value="${_object.ethernetDriver.ordinal()}  ${_object.ethernetDriver.name()}" 
+			onchange=formatChange(value);
+			>
+				<option name="E1000" 	ord="0" value="E1000" 	${_object.ethernetDriver.ordinal()==0 ? "selected" : ""}>E1000</option>
+				<option name="PCNet32" 	ord="1" value="PCNet32" ${_object.ethernetDriver.ordinal()==1 ? "selected" : ""}>PCNet32</option>
+				<option name="VMXNET3" 	ord="2" value="VMXNET3" 	${_object.ethernetDriver.ordinal()==2 ? "selected" : ""}>VMXNET3</option>
+			</select>
+		
+			#{ifError 'object.diskFileFormat'}
+				<span class="error">#{error 'object.diskFileFormat' /}</span>
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">REQUIRED</span>
+			#{/else}		
+		</div>	
+
 		
 	</fieldset> 
 	

@@ -54,6 +54,14 @@
 				<rasd:VirtualQuantity>${ovfpackage.ram}</rasd:VirtualQuantity>
 			</Item>
 			<Item>
+				<rasd:Caption>vNic Driver ${ovfpackage.ethernetDriver}</rasd:Caption>
+				<rasd:Description>Ethernet Adapter</rasd:Description>
+				<rasd:InstanceId>3</rasd:InstanceId>
+				<rasd:ResourceType>10</rasd:ResourceType>
+				<rasd:Connection>bridged</rasd:Connection>
+				<rasd:ResourceSubType>${ovfpackage.ethernetDriver}</rasd:ResourceSubType>
+			</Item>			
+			<Item>
 				<rasd:Caption>Harddisk 0</rasd:Caption>
 				<rasd:InstanceId>11</rasd:InstanceId>
 				<rasd:ResourceType>17</rasd:ResourceType>

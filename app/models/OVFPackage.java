@@ -49,12 +49,16 @@ public class OVFPackage extends Model
 
     @MaxSize(256)
     public String iconPath;
+
     @MaxSize(256)
     public String categoryName;
+
     @MaxSize(256)
     public String user;
 
-    
+    @Enumerated(EnumType.STRING)
+    public EthernetDriver ethernetDriver;
+
     // DEFAULTS
     private final static Integer CPU_DEFAULT = 1;
 
@@ -81,7 +85,7 @@ public class OVFPackage extends Model
     {
         return hdInBytes(getHd(), getHdSizeUnit());
     }
-    
+
     public static Long hdInBytes(final long hd, final MemorySizeUnitType units)
     {
         Long hdB = hd;
@@ -101,9 +105,8 @@ public class OVFPackage extends Model
         }
 
         return hdB;
-        
+
     }
-    
 
     public Long getRam()
     {
@@ -126,10 +129,20 @@ public class OVFPackage extends Model
         return iconPath != null ? iconPath : Router.getFullUrl("OVFPackages.list")
             + "public/icons/q.png";
     }
-    
+
     public DiskFormatType getDiskFileFormat()
     {
         return diskFileFormat != null ? diskFileFormat : DiskFormatType.VMDK_STREAM_OPTIMIZED;
+    }
+
+    public EthernetDriver getEthernetDriver()
+    {
+        return ethernetDriver != null ? ethernetDriver : EthernetDriver.E1000;
+    }
+
+    public void setEthernetDriver(final EthernetDriver ethernetDriver)
+    {
+        this.ethernetDriver = ethernetDriver;
     }
 
     public OVFPackage()
@@ -140,7 +153,8 @@ public class OVFPackage extends Model
     public OVFPackage(final String name, final String description,
         final DiskFormatType diskFileFormat, final String diskFilePath, final Long diskFileSize,
         final Integer cpu, final Long ram, final Long hd, final MemorySizeUnitType ramSizeUnit,
-        final MemorySizeUnitType hdSizeUnit, final String iconPath, final String categoryName, final String user)
+        final MemorySizeUnitType hdSizeUnit, final String iconPath, final String categoryName,
+        final String user)
     {
         super();
 
@@ -174,6 +188,13 @@ public class OVFPackage extends Model
         {
             return this.name();
         }
+    }
+
+    public enum EthernetDriver
+    {
+        /* 0 */ E1000,
+        /* 1 */ PCNet32, 
+        /* 2 */ VMXNET3
     }
 
     public enum DiskFormatType
@@ -215,12 +236,10 @@ public class OVFPackage extends Model
             return this.name();
         }
     }
-    
-    
+
     public boolean isDiskUrl()
     {
         return diskFilePath.startsWith("http://");
     }
-
 
 }

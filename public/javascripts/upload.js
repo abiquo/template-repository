@@ -57,7 +57,9 @@ function startCreateOVF(createUrl) {
 		fd.append("object.name", document.getElementById('object_name').value);
 		fd.append("object.categoryName", document.getElementById('object_categoryName').value);
 		fd.append("object.iconPath",document.getElementById('object_iconPath').value);
-		
+        fd.append("object.ethernetDriver",document.getElementById('object_ethernetDriver').value);
+
+            
 
 		if(diskFile)
 		{

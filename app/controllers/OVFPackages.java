@@ -71,7 +71,15 @@ public class OVFPackages extends CRUD
 
             URL diskUrl = new URL(object.diskFilePath);
 
-            object.diskFileSize = Long.valueOf(WS.url(object.diskFilePath).head().getHeader("Content-Length"));
+            try
+            {                
+                object.diskFileSize = Long.valueOf(WS.url(object.diskFilePath).head().getHeader("Content-Length"));
+            }
+            catch (Exception e) 
+            {
+                response.status = 404;
+                renderText("Url not found "+object.diskFilePath);
+            }
                 
 //            InputStream fis = WS.url(object.diskFilePath).get().getStream();
             InputStream fis = diskUrl.openStream();

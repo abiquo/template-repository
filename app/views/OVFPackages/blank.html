@@ -78,17 +78,18 @@
 	<!--  UPLOAD USING FILE -->
 
 	<div id="diskFileSelector" class="diskFileSelector">
+		Choose where is the Disk File
 
-		<div class="uploadOption" id="fileOption" style="float: left;">
+		<div class="uploadOption" id="fileOption"> <!-- style="float: left;" -->
+			Local filesystem
 			<input id="diskFile" type="file" name="diskFile"  
 			onchange="fileSelected();" value="Enter local file path"/>
-			local source
 		</div>
 
-		<div class="uploadOption" id="urlOption" style="float: right;">
-				<input id="diskUrl" type="text" name="diskUrl"
-					onChange="urlSelected();" value="Enter a file URL"/>				
-			remote source 		
+		<div class="uploadOption" id="urlOption"> <!-- style="float: right;" -->
+			Remote disk file 		
+			<input id="diskUrl" type="text" name="diskUrl"
+			onChange="urlSelected();" value="Enter a file URL" size="50"/>				
 		</div>	
 	 </div>
 
