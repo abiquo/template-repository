@@ -149,6 +149,7 @@ public class OVFPackages extends CRUD
         final String timestamp = new DateTime().toString(TIME_FORMATTER);
 
         object.user = session.get("username");
+        object.templateVersion = 1;
 
         String url = urlSelected(object.diskFilePath);
         if(url!=null)
@@ -273,13 +274,13 @@ public class OVFPackages extends CRUD
 
     /** ********** GET ********** */
 
-    // public static void get(final Long id)
-    // {
-    // OVFPackage ovfpackage = OVFPackage.findById(id);
-    // notFoundIfNull(ovfpackage);
-    //
-    // render(ovfpackage);
-    // }
+    public static void get(final Long id)
+    {
+        OVFPackage ovfpackage = OVFPackage.findById(id);
+        notFoundIfNull(ovfpackage);
+
+        renderTemplate("OVFPackages/get.xml", ovfpackage);
+    }
 
     public static void getByName(final String name)
     {
@@ -287,7 +288,6 @@ public class OVFPackages extends CRUD
         notFoundIfNull(ovfpackage);
 
         renderTemplate("OVFPackages/get.xml", ovfpackage);
-        // get(ovfpackage.id);
     }
 
     public static void getRepository(final String diskFilePath)

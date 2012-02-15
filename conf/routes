@@ -6,6 +6,8 @@
 GET     /                                      		OVFPackages.list
 GET		/ovfindex.xml								OVFPackages.ovfindex(format:'xml')
 GET     /{name}/desc.ovf							OVFPackages.getByName(format:'xml')
+GET     /ovf/{id}/desc.ovf							OVFPackages.get(format:'xml')
+
 GET		/vm_repository/{diskFilePath}				OVFPackages.getRepository
 
 POST   	/createOvf									OVFPackages.createOvf

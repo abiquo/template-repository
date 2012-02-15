@@ -59,6 +59,18 @@ public class OVFPackage extends Model
     @Enumerated(EnumType.STRING)
     public EthernetDriver ethernetDriver;
 
+    public Integer templateVersion;
+
+    public void setTemplateVersion(final Integer templateVersion)
+    {
+        this.templateVersion = templateVersion;
+    }
+
+    public Integer getTemplateVersion()
+    {
+        return templateVersion != null ? templateVersion : 0;    
+    }
+
     // DEFAULTS
     private final static Integer CPU_DEFAULT = 1;
 
