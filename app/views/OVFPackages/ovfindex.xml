@@ -13,8 +13,14 @@
 				ns2:OVFFile="@@{OVFPackages.get(id:ovfpackage.id)}"
 			#{/if}
 			#{else}
-					ns2:OVFFile="@@{OVFPackages.getByName(name:ovfpackage.name)}"
+				#{if fullpath == true}                                			
+				ns2:OVFFile="@@{OVFPackages.getByName(name:ovfpackage.name)}"
+				#{/if}
+				#{else}
+				ns2:OVFFile="@{OVFPackages.getByName(name:ovfpackage.name)}"
+				#{/else}
 			#{/else}
+
 				ns2:DiskFormat="${ovfpackage.diskFileFormat}"
 				ns2:OVFCategories="${ovfpackage.categoryName}" 
                 ns1:instance="" ns1:class="">

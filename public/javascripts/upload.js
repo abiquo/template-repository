@@ -130,12 +130,12 @@ function uploadComplete(evt)
 	document.getElementById("progess100").style.display = 'none';        
 
 	
-	
   /* This event is raised when the server send back a response         
    */
-  if(evt.target.status == 200)
+  if(evt.target.status == 201)
 	{
-	  document.getElementById("uploadFlashSuccess").style.display= 'block';
+		window.location = evt.target.responseText;		
+		document.getElementById("uploadFlashSuccess").style.display= 'block';
 	}
   else
 	{
@@ -143,6 +143,7 @@ function uploadComplete(evt)
 	  document.getElementById("uploadFlashFail").innerHTML=evt.target.responseText;
 	  // alert("fail : "+ evt.target.responseText);	
 	}
+
 }
 
 ////http://jquery-html5-upload.googlecode.com/svn/trunk/jquery.html5_upload.js

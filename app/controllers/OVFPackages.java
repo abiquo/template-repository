@@ -1,240 +1,216 @@
 package controllers;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import models.OVFPackage;
-import models.OVFPackage.DiskFormatType;
-import models.OVFPackage.MemorySizeUnitType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 
 import play.Play;
 import play.i18n.Messages;
+import play.jobs.JobsPlugin;
 import play.libs.OpenID;
 import play.libs.OpenID.UserInfo;
 import play.libs.WS;
-import play.libs.WS.FileParam;
-import play.libs.WS.HttpResponse;
 import play.mvc.Before;
-
-import com.google.gson.JsonObject;
+import play.mvc.Http.StatusCode;
+import play.mvc.Router;
+import controllers.DiskID.DiskId;
 
 public class OVFPackages extends CRUD
 {
 
+    final static Boolean fullpath = Boolean.TRUE;
+    
+    
     public static void ovfindex()
     {
-        List<OVFPackage> ovfpackages = OVFPackage.findAll();
-
         request.format = "xml";
-        render(ovfpackages);
+
+        Boolean fullpath = OVFPackages.fullpath;
+        List<OVFPackage> ovfpackages = OVFPackage.findAll();
+        render(ovfpackages, fullpath);
     }
 
-    final static DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
-        .appendMonthOfYear(2).appendLiteral('-')//
-        .appendDayOfMonth(2).appendLiteral('-')//
-        .appendMillisOfDay(8).toFormatter();
-
-    
-    
-    private static void createTemplateFromDiskUrl(final OVFPackage object)
+    public static void createOvf(final OVFPackage object, final File diskFile)
     {
-        final String timestamp = new DateTime().toString(TIME_FORMATTER);
+        object.user = session.get("username");
+        object.unicNameOrAppendTimestamp();
+        object.templateVersion = 1;
 
-        String absPath = null;
+        if (isUrlSelected(object))
+        {
+            return;
+        }
 
+        Future<DiskId> invoc = DiskID.useDiskId(diskFile);
+
+        DiskId diskId = await(invoc);
+
+        applyDiskId(object, diskId);
+
+        object.diskFilePath = FilenameUtils.concat(getRepositoryLocation(), //
+            object.name +'.'+ FilenameUtils.getExtension(diskFile.getName()));
+
+        checkIsValid(object);
+        // TODO check there is space left on the device
+        if (new File(object.diskFilePath).exists())
+        {
+            response.status = 500;
+            renderText("path already exist" + object.diskFilePath);
+            return;
+        }
+
+        Future<String> copy = movingTheDiskIsAnExpensiveOperation(object, diskFile);
+
+        final String moveError = await(copy);
+        if (!StringUtils.isEmpty(moveError))
+        {
+            response.status = 500;
+            renderText("Can't save the file in the repository filesystem : " + moveError);
+            return;
+        }
+
+        object._save();
+
+        redirectToCreated(object);
+    }
+
+    protected static void createFromUrl(final OVFPackage object)
+    {
         try
         {
-            // remove extension from default name (file name)
-            object.name = URLEncoder.encode(FilenameUtils.getBaseName(object.name), "UTF-8");
-            // TODO also in save
+            object.diskFileSize =
+                Long.valueOf(WS.url(object.diskFilePath).head().getHeader("Content-Length"));
 
-            // check name is unique or append time-stamp
-            if (OVFPackage.find("name", object.name).first() != null)
-            {
-                object.name = object.name + timestamp;
-            }
+            Future<DiskId> invoc = DiskID.useDiskId(object.diskFilePath, object.diskFileSize);
 
-            URL diskUrl = new URL(object.diskFilePath);
+            DiskId diskId = await(invoc);
 
-            try
-            {                
-                object.diskFileSize = Long.valueOf(WS.url(object.diskFilePath).head().getHeader("Content-Length"));
-            }
-            catch (Exception e) 
-            {
-                response.status = 404;
-                renderText("Url not found "+object.diskFilePath);
-            }
-                
-//            InputStream fis = WS.url(object.diskFilePath).get().getStream();
-            InputStream fis = diskUrl.openStream();
-            DiskId diskId = useDiskId(headFile(fis));
-
-            object.diskFileFormat = diskId.type;
-            object.hd = (long) diskId.hd; // FIXME double round
-            object.hdSizeUnit = object.hdSizeUnit;
-            object.hdInBytes = OVFPackage.hdInBytes(object.hd, object.hdSizeUnit);
-
-            play.Logger.info("DiskID guess %s\t %d\t %s", object.diskFileFormat.name(), object.hd,
-                object.hdSizeUnit.name());
-
-            validation.valid(object);
-            if (validation.hasErrors())
-            {
-                play.Logger.error("Can't create template %s\t %s\t %s\n%s", object.id, object.name,
-                    object.diskFilePath, validation.errorsMap().toString());
-                response.status = 500;
-                renderText("Can't validate Template attributes"+validation.errorsMap().toString());
-                return;
-
-            }
-            object._save();
-
-            // object = object.save();
-            play.Logger.info("Template %s\t %s\t %s", object.id, object.name, object.diskFilePath);
+            applyDiskId(object, diskId);
         }
-        catch (Exception e)
+        catch (IOException e1)
         {
-            play.Logger.error(e, "Template %s FAIL ", object.name);
-            e.printStackTrace();
-
-            object._delete();
-            try
-            {
-                new File(absPath).delete();
-            }
-            catch (Exception ed)
-            {
-            }
-
-            response.status = 500;
-            renderText(e.getMessage());
+            response.status = 404;
+            renderText("Url not found " + object.diskFilePath);
+            // response.status = StatusCode.BAD_REQUEST; //NOT_FOUND
+            // renderText("Invalid template disk file URL : " + e1.getMessage());
         }
+
+        checkIsValid(object);
+
+        object._save();
+
+        redirectToCreated(object);
     }
-    
+
+    private static void redirectToCreated(final OVFPackage object)
+    {
+        final String templateUrl = Router.reverse("OVFPackages.show", new HashMap<String, Object>()
+        {
+            {
+                put("id", object.id.toString());
+            }
+        }).url;
+
+        play.Logger.info("Template ready at %s", templateUrl);
+
+        response.status = StatusCode.CREATED;
+        response.setHeader("Location", templateUrl);
+        renderText(templateUrl);
+    }
+
+    private static void checkIsValid(final OVFPackage object)
+    {
+        validation.valid(object);
+        if (validation.hasErrors())
+        {
+            play.Logger.error("Can't create template %s\t %s\t %s\n%s", object.id, object.name,
+                object.diskFilePath, validation.errorsMap().toString());
+            response.status = 500;
+            renderText("Can't validate Template attributes" + validation.errorsMap().toString());
+            return;
+
+        }
+
+    }
+
     private static String urlSelected(final String url)
     {
-        if(url.startsWith("http://"))
+        if (url.startsWith("http://"))
         {
             return url;
         }
-        else if(url.contains("/"))
+        else if (url.contains("/")) // fucking modern browser copy/paste
         {
-            return "http://"+url;
+            return "http://" + url;
         }
         else
         {
             return null;
         }
     }
-    
-    public static void createOvf(final OVFPackage object, final File diskFile)
+
+    private static boolean isUrlSelected(final OVFPackage object)
     {
-
-        final String timestamp = new DateTime().toString(TIME_FORMATTER);
-
-        object.user = session.get("username");
-        object.templateVersion = 1;
-
         String url = urlSelected(object.diskFilePath);
-        if(url!=null)
+        if (url != null)
         {
             object.diskFilePath = url;
-            createTemplateFromDiskUrl(object);
-            return;
+            createFromUrl(object);
+            return true;
         }
-        
-        
-        String absPath = null;
+        return false;
+    }
 
-        try
+    private static Future<String> movingTheDiskIsAnExpensiveOperation(final OVFPackage object,
+        final File uploaded)
+    {
+
+        return JobsPlugin.executor.submit(new Callable<String>()
         {
-            // remove extension from default name (file name)
-            object.name = URLEncoder.encode(FilenameUtils.getBaseName(object.name), "UTF-8");
-            // TODO also in save
-
-            // check name is unique or append time-stamp
-            if (OVFPackage.find("name", object.name).first() != null)
+            @Override
+            public String call() throws Exception
             {
-                object.name = object.name + timestamp;
+                play.Logger.info("Moving to %s", object.diskFilePath);
+                try
+                {
+                    FileUtils.copyFile(uploaded, new File(object.diskFilePath));
+                    return null;
+                }
+                catch (IOException e)
+                {
+                    play.Logger.error(e, "Template %s FAIL ", object.name);
+
+                    try
+                    {
+                        new File(object.diskFilePath).delete();
+                    }
+                    catch (Exception ed)
+                    {
+                        ed.printStackTrace();
+                    }
+
+                    return e.getMessage();
+                }
             }
+        });
+    }
 
-            DiskId diskId = useDiskId(diskFile);
+    private static void applyDiskId(final OVFPackage object, final DiskId diskId)
+    {
+        object.diskFileFormat = diskId.format;
+        object.hdInBytes = diskId.hdBytes;
+        object.computeSimpleUnits();
 
-            object.diskFileFormat = diskId.type;
-            object.hd = (long) diskId.hd; // FIXME double round
-            object.hdSizeUnit = object.hdSizeUnit;
-            object.hdInBytes = OVFPackage.hdInBytes(object.hd, object.hdSizeUnit);
-
-            play.Logger.info("DiskID guess %s\t %d\t %s", object.diskFileFormat.name(), object.hd,
-                object.hdSizeUnit.name());
-
-            object.diskFilePath = diskFile.getName();
-
-            absPath = FilenameUtils.concat(getRepositoryLocation(), object.diskFilePath);
-            if (new File(absPath).exists())
-            {
-                object.diskFilePath =
-                    FilenameUtils.concat(FilenameUtils.getFullPath(object.diskFilePath),
-                        FilenameUtils.getBaseName(object.diskFilePath) + timestamp + '.'
-                            + FilenameUtils.getExtension(object.diskFilePath));
-
-                absPath = FilenameUtils.concat(getRepositoryLocation(), object.diskFilePath);
-
-                // response.status = 409;// conflict
-                // renderText("Disk file already exist at " + diskFilePath);
-                // return;
-            }
-
-            validation.valid(object);
-            if (validation.hasErrors())
-            {
-                play.Logger.error("Can't create template %s\t %s\t %s\n%s", object.id, object.name,
-                    object.diskFilePath, validation.errorsMap().toString());
-                response.status = 500;
-                renderText("Can't validate Template attributes");
-                return;
-
-            }
-            object._save();
-
-            // object = object.save();
-            play.Logger.info("Template %s\t %s\t %s", object.id, object.name, object.diskFilePath);
-
-            FileUtils.copyFile(diskFile, new File(absPath));
-        }
-        catch (Exception e)
-        {
-            play.Logger.error(e, "Template %s FAIL ", object.name);
-            e.printStackTrace();
-
-            object._delete();
-            try
-            {
-                new File(absPath).delete();
-            }
-            catch (Exception ed)
-            {
-            }
-
-            response.status = 500;
-            renderText(e.getMessage());
-        }
+        play.Logger.info("DiskID %s\t %d\tMb", object.diskFileFormat.name(), object.hd);
     }
 
     /** ********** DELETE ********** */
@@ -244,7 +220,7 @@ public class OVFPackages extends CRUD
         OVFPackage object = OVFPackage.findById(Long.valueOf(id));
         notFoundIfNull(object);
 
-        if(!object.isDiskUrl())
+        if (!object.isDiskUrl())
         {
             try
             {
@@ -256,9 +232,9 @@ public class OVFPackages extends CRUD
             {
                 flash.error(Messages.get("crud.delete.error", "OVFPackage"));
                 redirect(request.controller + ".show", object._key());
-            }            
+            }
         }
-        
+
         try
         {
             object._delete();
@@ -291,17 +267,17 @@ public class OVFPackages extends CRUD
     }
 
     public static void getRepository(final String diskFilePath)
-    {        
-//        if(diskFilePath.startsWith("http://"))
-//        {
-//            redirect(diskFilePath);
-//        }
-//        
+    {
+        if (diskFilePath.startsWith("http://"))
+        {
+            redirect(diskFilePath);
+        }
+
         File diskFile = new File(FilenameUtils.concat(getRepositoryLocation(), diskFilePath));
 
         play.Logger.info("file : %s", diskFilePath);
 
-        renderBinary(diskFile);
+        renderBinary(diskFile, diskFile.getName());
     }
 
     private static String getRepositoryLocation()
@@ -316,125 +292,10 @@ public class OVFPackages extends CRUD
         return path.endsWith("/") ? path : path.concat("/");
     }
 
-    /** ********** DISK ID guess virtual disk format ********** */
+    /**
+     * OpenID session authentication
+     */
 
-    static class DiskId
-    {
-        DiskFormatType type;
-
-        double hd;
-
-        MemorySizeUnitType unit;
-
-        public DiskId(final DiskFormatType type, final double hd, final MemorySizeUnitType unit)
-        {
-            super();
-            this.type = type;
-            this.hd = hd;
-            this.unit = unit;
-        }
-    }
-
-    private static DiskId useDiskId(final File diskFile) throws Exception
-    {
-
-        HttpResponse resp =
-            WS.url(getDiskIdUrl()).files(new FileParam(headFile(new FileInputStream(diskFile)), "chunk")).post();
-
-        if (resp.getStatus() != 200)
-        {
-            // TODO show error
-            throw new RuntimeException("Can't use " + getDiskIdUrl()
-                + " to guess the template format");
-        }
-
-        JsonObject diskId = resp.getJson().getAsJsonObject();
-        
-        String format = diskId.get("format").getAsString();
-        String variant = "no_variant";
-        try
-        {
-            variant = diskId.get("variant").getAsString();
-            
-            variant = variant.replaceAll("streamOptimized", "stream_Optimized");
-            variant = variant.replaceAll("monolithic", "");
-        }
-        catch (Exception e)
-        {
-        }
-
-        DiskFormatType type =
-            format.equalsIgnoreCase("vmdk") ? DiskFormatType.valueOf((format + "_" + variant)
-                .toUpperCase()) : format.equalsIgnoreCase("qcow2") ? DiskFormatType.QCOW2_SPARSE
-                : DiskFormatType.valueOf(format.toUpperCase());
-
-        // SIZE
-        Double hd = 1.0;
-        MemorySizeUnitType unit = MemorySizeUnitType.BYTE;
-        try
-        {
-            final String virtual_size = diskId.get("virtual_size").getAsString();
-            hd = Double.parseDouble(virtual_size.substring(0, virtual_size.length() - 1));
-            unit =
-                MemorySizeUnitType.valueOf(virtual_size.substring(virtual_size.length() - 1) + "B");
-        }
-        catch (Exception e)
-        {
-        }
-
-        return new DiskId(type, hd, unit);
-
-    }
-
-    private final static String DISK_ID_URL_DEFAULT = "http://diskid.frameos.org/?format=json";
-
-    private static String getDiskIdUrl()
-    {
-        return Play.configuration.getProperty("ovfcatalog.diskIdUrl", DISK_ID_URL_DEFAULT);
-    }
-
-    private final static int REQUIRED_LINES = 20;
-
-    private static File headFile(final InputStream inputstream)
-    {
-        File outFile = null;
-        DataInputStream in = null;
-        DataOutputStream out = null;
-        try
-        {
-            outFile = File.createTempFile(UUID.randomUUID().toString(), "head");
-            out = new DataOutputStream(new FileOutputStream(outFile));
-            in = new DataInputStream(inputstream);
-
-            byte[] line = new byte[1024];
-
-            for (int i = 0; i <= REQUIRED_LINES; i++)
-            {
-                in.readFully(line);
-                out.write(line);
-            }
-
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Can't read disk file header", e);
-        }
-        finally
-        {
-            try
-            {
-                out.close();
-                in.close();
-            }
-            catch (Exception e)
-            {
-            }
-        }
-
-        return outFile;
-    }
-
-    // /
     @Before(unless = {"login", "authenticate", "ovfindex", "getByName", "getRepository"})
     static void checkAuthenticated()
     {

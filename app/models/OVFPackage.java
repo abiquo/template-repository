@@ -1,8 +1,17 @@
 package models;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.xml.ws.WebServiceException;
+
+import org.apache.commons.io.FilenameUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
@@ -95,12 +104,12 @@ public class OVFPackage extends Model
 
     public Long getHdInBytes()
     {
-        return hdInBytes(getHd(), getHdSizeUnit());
+        return getHdSizeUnit() == MemorySizeUnitType.BYTE ? getHd() : hdInBytes(getHd().doubleValue(), getHdSizeUnit());
     }
 
-    public static Long hdInBytes(final long hd, final MemorySizeUnitType units)
+    public static Long hdInBytes(final Double hd, final MemorySizeUnitType units)
     {
-        Long hdB = hd;
+        Double hdB = hd;
 
         switch (units)
         {
@@ -116,7 +125,7 @@ public class OVFPackage extends Model
                 break;
         }
 
-        return hdB;
+        return hdB.longValue();
 
     }
 
@@ -156,6 +165,32 @@ public class OVFPackage extends Model
     {
         this.ethernetDriver = ethernetDriver;
     }
+    
+    final static DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
+    .appendMonthOfYearShortText()
+    .appendDayOfMonth(2).appendLiteral('_')//
+    .appendHourOfDay(2).appendLiteral("-").appendMinuteOfHour(2).toFormatter();
+
+    
+    public void unicNameOrAppendTimestamp() 
+    {
+        // remove extension from default name (file name)
+        try
+        {
+            name =  URLEncoder.encode(FilenameUtils.getBaseName(name), "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new WebServiceException(e);
+        }
+
+        // check name is unique or append time-stamp
+        if (find("name", name).first() != null)
+        {
+            name = name +"_"+new DateTime().toString(TIME_FORMATTER);
+        }
+    }
+    
 
     public OVFPackage()
     {
@@ -252,6 +287,12 @@ public class OVFPackage extends Model
     public boolean isDiskUrl()
     {
         return diskFilePath.startsWith("http://");
+    }
+
+    public void computeSimpleUnits()
+    {
+        this.hd = hdInBytes / (1024*1024);
+        this.hdSizeUnit = MemorySizeUnitType.MB;
     }
 
 }
