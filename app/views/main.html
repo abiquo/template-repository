@@ -19,7 +19,7 @@
 		    #{navigation /}
         -->
         #{if session.get("user") != "notauthenticatedId"}            
-            ${session.get("username")}
+           <img src="${session.get("gravatar")}" height="30" width="30">
         #{/if}
         </div>
     

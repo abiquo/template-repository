@@ -17,6 +17,7 @@ import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.Model;
+import play.libs.Codec;
 import play.mvc.Router;
 
 @Entity
@@ -63,7 +64,7 @@ public class OVFPackage extends Model
     public String categoryName;
 
     @MaxSize(256)
-    public String user;
+    public String userMail;
 
     @Enumerated(EnumType.STRING)
     public EthernetDriver ethernetDriver;
@@ -85,7 +86,7 @@ public class OVFPackage extends Model
 
     private final static Long RAM_DEFAULT = 512l;
 
-    private final static Long HD_DEFAULT = 4l;
+    private final static Long HD_DEFAULT = 2l;
 
     public Integer getCpu()
     {
@@ -205,7 +206,7 @@ public class OVFPackage extends Model
     {
         super();
 
-        this.user = user;
+        this.userMail = user;
         this.name = name;
         this.diskFileFormat = diskFileFormat;
         this.description = description;
@@ -289,10 +290,18 @@ public class OVFPackage extends Model
         return diskFilePath.startsWith("http://");
     }
 
-    public void computeSimpleUnits()
+    public void computeSimpleUnits(final long hdInBytes)
     {
-        this.hd = hdInBytes / (1024*1024);
+        this.hd = hdInBytes / 1048576;
         this.hdSizeUnit = MemorySizeUnitType.MB;
     }
+    
+    
+    public String gravatarCreator()
+    {
+        return userMail == null || userMail.equalsIgnoreCase("not authenticated")?"http://www.gravatar.com/avatar/default.jpeg"://
+            String.format("http://www.gravatar.com/avatar/%s.jpeg", Codec.hexMD5(userMail));
+    }
+
 
 }

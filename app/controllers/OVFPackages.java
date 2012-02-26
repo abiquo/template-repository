@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import play.Play;
 import play.i18n.Messages;
 import play.jobs.JobsPlugin;
+import play.libs.Codec;
 import play.libs.OpenID;
 import play.libs.OpenID.UserInfo;
 import play.libs.WS;
@@ -28,8 +29,7 @@ public class OVFPackages extends CRUD
 {
 
     final static Boolean fullpath = Boolean.TRUE;
-    
-    
+
     public static void ovfindex()
     {
         request.format = "xml";
@@ -41,7 +41,7 @@ public class OVFPackages extends CRUD
 
     public static void createOvf(final OVFPackage object, final File diskFile)
     {
-        object.user = session.get("username");
+        object.userMail = session.get("username");
         object.unicNameOrAppendTimestamp();
         object.templateVersion = 1;
 
@@ -57,7 +57,7 @@ public class OVFPackages extends CRUD
         applyDiskId(object, diskId);
 
         object.diskFilePath = FilenameUtils.concat(getRepositoryLocation(), //
-            object.name +'.'+ FilenameUtils.getExtension(diskFile.getName()));
+            object.name + '.' + FilenameUtils.getExtension(diskFile.getName()));
 
         checkIsValid(object);
         // TODO check there is space left on the device
@@ -208,10 +208,11 @@ public class OVFPackages extends CRUD
     {
         object.diskFileFormat = diskId.format;
         object.hdInBytes = diskId.hdBytes;
-        object.computeSimpleUnits();
+        object.computeSimpleUnits(diskId.hdBytes);
 
         play.Logger.info("DiskID %s\t %d\tMb", object.diskFileFormat.name(), object.hd);
     }
+    
 
     /** ********** DELETE ********** */
 
@@ -296,7 +297,8 @@ public class OVFPackages extends CRUD
      * OpenID session authentication
      */
 
-    @Before(unless = {"login", "authenticate", "ovfindex", "getByName", "getRepository"})
+    @Before(unless = {"login", "authenticate", //
+        "ovfindex", "getByName", "getRepository"})
     static void checkAuthenticated()
     {
         if (StringUtils.isEmpty(Play.configuration.getProperty("organization.domain")))
@@ -348,11 +350,15 @@ public class OVFPackages extends CRUD
                 else
                 {
 
-                    session.put("username", userEmail.replaceAll("@" + domain, ""));
-                    String name1 = verifiedUser.extensions.get("firstname");
-                    String name2 = verifiedUser.extensions.get("lastname");
+                    session.put("username", userEmail);
                     session.put("user", verifiedUser.id);
-                    flash.success("Welcome " + name1 + " " + name2, null);
+                    session.put("gravatar", String.format("http://www.gravatar.com/avatar/%s.jpeg", Codec.hexMD5(userEmail)));
+
+                    flash.success(
+                        "Welcome %s %s",//
+                        verifiedUser.extensions.get("firstname"),
+                        verifiedUser.extensions.get("lastname"));
+                    
                     redirect(request.controller + ".list");
                 }
             }

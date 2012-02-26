@@ -22,11 +22,13 @@
 			#{/else}
 
 				ns2:DiskFormat="${ovfpackage.diskFileFormat}"
+				ns2:DiskSize="${ovfpackage.diskFileSize}"
+
 				ns2:OVFCategories="${ovfpackage.categoryName}" 
                 ns1:instance="" ns1:class="">
                 
-                <ns1:Info>${ovfpackage.description}</ns1:Info>
                 <ns1:Product>${ovfpackage.name}</ns1:Product>
+                <ns1:Info>${ovfpackage.description}</ns1:Info>
                 #{if ovfpackage.iconPath}                                
                 	<ns1:Icon ns1:fileRef="${ovfpackage.iconPath}" ns1:mimeType="image/jpeg" ns1:width="32" ns1:height="32" />
                 #{/if}
