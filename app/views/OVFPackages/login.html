@@ -1,5 +1,5 @@
 #{extends 'OVFPackages/layout.html' /}
-<form action="@{OVFPackages.authenticate()}" method="POST">
+<form action="@{OVFPackages.authenticate()}" method="POST" class="welḷbtn btn-primary">
     <label for="user"> Login using your ${play.configuration.getProperty("organization.domain")} account</label>
     <button type="submit"/>
 </form>

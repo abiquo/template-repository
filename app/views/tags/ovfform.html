@@ -1,35 +1,145 @@
-<div id="autofill">
+	<fieldset class="well"> 
+		<legend>Product Description</legend> 
 
-	<fieldset> 
-		<legend>Virtual Disk File</legend> 
-		
-		<div id="crudListAdd">
-			<a href="@@{OVFPackages.getRepository(_object.diskFilePath)}">Disk File</a>
-		</div>
+		<div class="crudField crud_text">
+			
+			<img src="${_object.iconPath}" height="50"	width="50"	alt="Angry face" style="float: right;">
 
-		<div class="crudField crud_text"> <!-- style="display: none;" -->
-			<label for="object_diskFilePath">
-				Path
-			</label>
-			<input id="object_diskFilePath" class="" type="text" name="object.diskFilePath" size="50" value="${_object.diskFilePath}"/>
-                               <!-- onchange="checkDownloadUpdate();" -->
-			#{ifError 'object.diskFilePath'}
-				<span class="error">#{error 'object.diskFilePath' /}</span>
+			<label for="object_name">Name</label>
+		    
+			<input id="object_name" class="" type="text" name="object.name" value="${_object.name}" size="50" />			
+			 #{ifError 'object.name'}
+				<span class="alert alert-error">#{error 'object.name' /}</span>
+			 #{/ifError}
+			 #{else}
+				<span class="crudHelp">Required</span>
+			 #{/else}
+			 			 
+			<br/>
+						
+			<label for="object_description">Description</label>
+			<textarea class="input-xxlarge" rows="5" id="object_description" type="text" name="object.description" value="${_object.description}" size="50">${_object.description}</textarea>
+
+			 #{ifError 'object.description'}
+				<span class="alert alert-error">#{error 'object.description' /}</span>			 
+			 #{/ifError}
+			 #{else}
+				<span class="crudHelp"></span>
+			 #{/else}
+			 
+			<br/>
+
+			<label for="object_categoryName">Category</label>
+			<input id="object_categoryName" class="" type="text" name="object.categoryName" value="${_object.categoryName}" size="50"/>
+			#{ifError 'object.categoryName'}
+				<span class="alert alert-error">#{error 'object.categoryName' /}</span>			 		
 			#{/ifError}
 			#{else}
-				<span class="crudHelp">valid URL</span>
-					<!-- <a id="checkDownload" href='http://unset'>check download</a> -->
+				<span class="crudHelp"></span>
+			#{/else}
+			 
+			<br/>
+
+			<label for="object_iconPath">Icon URL</label>
+			<input id="object_iconPath" class="input-xxlarge" type="text" name="object.iconPath" value="${_object.iconPath}" size="50"/>
+			#{ifError 'object.iconPath'}
+				<span class="alert alert-error">#{error 'object.iconPath' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp"></span>
+			#{/else}
+		
+		</div>
+	</fieldset> 
+	
+	
+	<fieldset class="well">
+		<legend>System Requirements</legend> 
+
+		<div class="crudField crud_number">
+			<label for="object_cpu">CPU</label>
+			<input class="input-mini" id="object_cpu" type="text" name="object.cpu" value="${_object.cpu}" size="5" />
+			#{ifError 'object.cpu'}
+				<span class="alert alert-error">#{error 'object.cpu' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">  </span>				
+			#{/else}			
+		</div>
+
+		<div class="crudField crud_number">
+			<label for="object_ram">RAM</label>
+			<input class="input-small" id="object_ram" type="text" name="object.ram" value="${_object.ram}" size="5" />
+			
+			<select class="input-mini" id="object_ramSizeUnit" name="object.ramSizeUnit" ><!-- value="${_object.ramSizeUnit.ordinal()}" -->
+				<option name="BYTE" ord="0" value="BYTE" ${_object.ramSizeUnit.ordinal()==0 ? "selected" : ""}>BYTE</option>
+				<option name="KB" ord="1" value="KB"     ${_object.ramSizeUnit.ordinal()==1 ? "selected" : ""}>KB</option>
+				<option name="MB" ord="2" value="MB"     ${_object.ramSizeUnit.ordinal()==2 ? "selected" : ""}>MB</option>
+				<option name="GB" ord="3" value="GB"     ${_object.ramSizeUnit.ordinal()==3 ? "selected" : ""}>GB</option>
+				<option name="TB" ord="4" value="TB"     ${_object.ramSizeUnit.ordinal()==4 ? "selected" : ""}>TB</option>
+			</select>
+			#{ifError 'object.ram'}
+				<span class="alert alert-error">#{error 'object.ram' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">  </span>				
+			#{/else}
+		</div>
+
+	<div id="guessDiskId">		
+		<div class="crudField">
+			<label for="object_hd">Hard Disk</label>
+			<input class="input-small" id="object_hd" type="text" name="object.hd" value="${_object.hd}" size="5" />
+			
+			<select class="input-mini" id="object_hdSizeUnit" name="object.hdSizeUnit" selected="${_object.hdSizeUnit}">
+				<option name="BYTE" ord="0" value="BYTE" ${_object.hdSizeUnit.ordinal()==0 ? "selected" : ""}>BYTE</option>
+				<option name="KB" ord="1" value="KB"     ${_object.hdSizeUnit.ordinal()==1 ? "selected" : ""}>KB</option>
+				<option name="MB" ord="2" value="MB"     ${_object.hdSizeUnit.ordinal()==2 ? "selected" : ""}>MB</option>
+				<option name="GB" ord="3" value="GB"     ${_object.hdSizeUnit.ordinal()==3 ? "selected" : ""}>GB</option>
+				<option name="TB" ord="4" value="TB"     ${_object.hdSizeUnit.ordinal()==4 ? "selected" : ""}>TB</option>
+			</select>
+		</div>
+	</div>				
+
+		<div class="crudField crud_enum">
+			<label for="object_ethernetDriver">Ethernet Driver</label>
+			<select class="input-small" id="object_ethernetDriver" name="object.ethernetDriver" value="${_object.ethernetDriver.ordinal()} ${_object.ethernetDriver.name()}"  onchange=formatChange(value);>
+				<option name="E1000" 	ord="0" value="E1000" 		${_object.ethernetDriver.ordinal()==0 ? "selected" : ""}>E1000</option>
+				<option name="PCNet32" 	ord="1" value="PCNet32" 	${_object.ethernetDriver.ordinal()==1 ? "selected" : ""}>PCNet32</option>
+				<option name="VMXNET3" 	ord="2" value="VMXNET3" 	${_object.ethernetDriver.ordinal()==2 ? "selected" : ""}>VMXNET3</option>
+			</select>
+		
+			#{ifError 'object.diskFileFormat'}
+				<span class="alert alert-error">#{error 'object.diskFileFormat' /}</span>
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">Required</span>
+			#{/else}		
+		</div>	
+	</fieldset> 
+
+<div id="autofill">
+	<fieldset class="well"> 
+		<legend>Virtual Disk File</legend> 
+
+		<div class="crudField crud_text"> <!-- style="display: none;" -->
+			<label for="object_diskFilePath">Path</label>
+			<input class="input-xxlarge" id="object_diskFilePath" class="" type="text" name="object.diskFilePath" size="50" value="${_object.diskFilePath}"/> 
+			#{ifError 'object.diskFilePath'}
+				<span class="alert alert-error">#{error 'object.diskFilePath' /}</span>
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">
+				<a class="btn-mini btn-info" href="@@{OVFPackages.getRepository(_object.diskFilePath)}">Download</a>		
+				</span>
 			#{/else}            
 		</div>
 		
 		<div class="crudField crud_number">
-			<label for="object_diskFileSize">
-				Size
-		    </label>
-			<input id="object_diskFileSize" type="text" name="object.diskFileSize" value="${_object.diskFileSize}" size="50" /> <!-- readonly="readonly"  -->
-
+			<label for="object_diskFileSize">Size</label>
+			<input class="input-small" id="object_diskFileSize" type="text" name="object.diskFileSize" value="${_object.diskFileSize}" size="50" /> 			
 			#{ifError 'object.diskFileSize'}
-				<span class="error">#{error 'object.diskFileSize' /}</span>
+				<span class="alert alert-error">#{error 'object.diskFileSize' /}</span>
 			#{/ifError}
 			#{else}
 				<span class="crudHelp">Required (Bytes)</span>
@@ -37,13 +147,9 @@
 		</div>
 
 		<div class="crudField crud_enum">
-			<label for="object_diskFileFormat">
-				Format
-		    </label>
-		
-			<select id="object_diskFileFormat" name="object.diskFileFormat" value="${_object.diskFileFormat.ordinal()}  ${_object.diskFileFormat.name()}" 
-			onchange=formatChange(value);
-			>
+			<label for="object_diskFileFormat">Format</label>		
+			<select class="input-small" id="object_diskFileFormat" name="object.diskFileFormat" value="${_object.diskFileFormat.ordinal()}  ${_object.diskFileFormat.name()}" 
+			onchange=formatChange(value);>
 				<option name="UNKNOWN" ord="0" value="UNKNOWN"
 				${_object.diskFileFormat.ordinal()==0 ? "selected" : ""}>UNKNOWN</option>
 
@@ -78,187 +184,23 @@
 				${_object.diskFileFormat.ordinal()==10 ? "selected" : ""}>QCOW2_FLAT</option>
 
 				<option name="QCOW2_SPARSE" ord="11" value="QCOW2_SPARSE"
-				${_object.diskFileFormat.ordinal()==11 ? "selected" : ""}>QCOW2_SPARSE
-
-				</option>
-			</select>
-		
+				${_object.diskFileFormat.ordinal()==11 ? "selected" : ""}>QCOW2_SPARSE</option>
+			</select>		
 			#{ifError 'object.diskFileFormat'}
-				<span class="error">#{error 'object.diskFileFormat' /}</span>
+				<span class="alert alert-error">#{error 'object.diskFileFormat' /}</span>
 			#{/ifError}
 			#{else}
-				<span class="crudHelp">REQUIRED</span>
+				<span class="crudHelp"> Required </span>
 			#{/else}		
 		</div>		
 	</fieldset> 
 </div><!-- autofill-->		
-		
-
 	
-	<fieldset> 
-		<legend>Product Description</legend> 
-
-		<div class="crudField crud_text">
-			
-			<label for="object_name">
-				Name
-		    </label>
-		    
-			<input id="object_name" class="" type="text" name="object.name" value="${_object.name}" size="50" />			
-			 #{ifError 'object.name'}
-				<span class="error">#{error 'object.name' /}</span>
-			 #{/ifError}
-			 #{else}
-				<span class="crudHelp"> Required. </span>
-			 #{/else}
-			 
-			<br/>
-						
-			<label for="object_description">
-				Description
-		    </label>
-			<input id="object_description" class="" type="text" name="object.description" value="${_object.description}" size="50" />
-			 #{ifError 'object.description'}
-				<span class="error">#{error 'object.description' /}</span>			 
-			 #{/ifError}
-			 #{else}
-				<span class="crudHelp"></span>
-			 #{/else}
-			 
-			
-			<br/>
-
-			<label for="object_categoryName">
-				Category
-	    	</label>
-			<input id="object_categoryName" class="" type="text" name="object.categoryName" value="${_object.categoryName}" size="50"/>
-			#{ifError 'object.categoryName'}
-				<span class="error">#{error 'object.categoryName' /}</span>			 		
-			#{/ifError}
-			#{else}
-				<span class="crudHelp"></span>
-			#{/else}
-			 
-			 
-			<br/>
-
-			<label for="object_iconPath">
-				Icon URL
-	    	</label>
-			<input id="object_iconPath" class="" type="text" name="object.iconPath" value="${_object.iconPath}" size="50" />
-			#{ifError 'object.iconPath'}
-				<span class="error">#{error 'object.iconPath' /}</span>			 		
-			#{/ifError}
-			#{else}
-				<span class="crudHelp"></span>
-			#{/else}
-
-
-		<img src="${_object.iconPath}" height="50"	width="50"	alt="Angry face" style="float: right;"/>
-
-									
-		</div>
-	</fieldset> 
-	
-	
-	<fieldset>
-		<legend>System Requirements</legend> 
-
-		<div class="crudField crud_number">
-			<label for="object_cpu">
-				CPU
-		    </label>
-			<input id="object_cpu" type="text" name="object.cpu" value="${_object.cpu}" size="5" />
-			#{ifError 'object.cpu'}
-				<span class="error">#{error 'object.cpu' /}</span>			 		
-			#{/ifError}
-			#{else}
-				<span class="crudHelp"> Numeric. </span>				
-			#{/else}
-			
-		</div>
-
-		<div class="crudField crud_number">
-			<label for="object_ram">
-				RAM
-		    </label>
-		
-			<input id="object_ram" type="text" name="object.ram" value="${_object.ram}" size="5" />
-			
-			<select id="object_ramSizeUnit" name="object.ramSizeUnit" ><!-- value="${_object.ramSizeUnit.ordinal()}" -->
-				<option name="BYTE" ord="0" value="BYTE" ${_object.ramSizeUnit.ordinal()==0 ? "selected" : ""}>BYTE</option>
-				<option name="KB" ord="1" value="KB"     ${_object.ramSizeUnit.ordinal()==1 ? "selected" : ""}>KB</option>
-				<option name="MB" ord="2" value="MB"     ${_object.ramSizeUnit.ordinal()==2 ? "selected" : ""}>MB</option>
-				<option name="GB" ord="3" value="GB"     ${_object.ramSizeUnit.ordinal()==3 ? "selected" : ""}>GB</option>
-				<option name="TB" ord="4" value="TB"     ${_object.ramSizeUnit.ordinal()==4 ? "selected" : ""}>TB</option>
-			</select>
-
-<!-- 
-selected="${_object.ramSizeUnit.name()=="BYTE"}"
-
-selected="${_object.ramSizeUnit}='TB'" 
-#{if _object.ramSizeUnit == 'GB'}selected="true"#{/if}
--->
-			
-			
-			#{ifError 'object.ram'}
-				<span class="error">#{error 'object.ram' /}</span>			 		
-			#{/ifError}
-			#{else}
-				<span class="crudHelp"> Numeric. </span>				
-			#{/else}
-		</div>
-
-	<div id="guessDiskId">		
-		<div class="crudField">
-			<label for="object_hd">
-				Hard Disk
-		    </label>
-			<input id="object_hd" type="text" name="object.hd" value="${_object.hd}" size="5" />
-			
-			<select id="object_hdSizeUnit" name="object.hdSizeUnit" selected="${_object.hdSizeUnit}">
-				<option name="BYTE" ord="0" value="BYTE" ${_object.hdSizeUnit.ordinal()==0 ? "selected" : ""}>BYTE</option>
-				<option name="KB" ord="1" value="KB"     ${_object.hdSizeUnit.ordinal()==1 ? "selected" : ""}>KB</option>
-				<option name="MB" ord="2" value="MB"     ${_object.hdSizeUnit.ordinal()==2 ? "selected" : ""}>MB</option>
-				<option name="GB" ord="3" value="GB"     ${_object.hdSizeUnit.ordinal()==3 ? "selected" : ""}>GB</option>
-				<option name="TB" ord="4" value="TB"     ${_object.hdSizeUnit.ordinal()==4 ? "selected" : ""}>TB</option>
-			</select>
-		</div>
-	</div>				
-
-		<div class="crudField crud_enum">
-			<label for="object_ethernetDriver">
-				Ethernet Driver
-		    </label>
-		
-			<select id="object_ethernetDriver" name="object.ethernetDriver" value="${_object.ethernetDriver.ordinal()}  ${_object.ethernetDriver.name()}" 
-			onchange=formatChange(value);
-			>
-				<option name="E1000" 	ord="0" value="E1000" 	${_object.ethernetDriver.ordinal()==0 ? "selected" : ""}>E1000</option>
-				<option name="PCNet32" 	ord="1" value="PCNet32" ${_object.ethernetDriver.ordinal()==1 ? "selected" : ""}>PCNet32</option>
-				<option name="VMXNET3" 	ord="2" value="VMXNET3" 	${_object.ethernetDriver.ordinal()==2 ? "selected" : ""}>VMXNET3</option>
-			</select>
-		
-			#{ifError 'object.diskFileFormat'}
-				<span class="error">#{error 'object.diskFileFormat' /}</span>
-			#{/ifError}
-			#{else}
-				<span class="crudHelp">REQUIRED</span>
-			#{/else}		
-		</div>	
-
-		
-	</fieldset> 
-	
-	
-
 	
 <div class="crudField crud_number" style="display: none;">
-	<label for="object_hdInBytes">
-		hdInBytes
-    </label>
+	<label for="object_hdInBytes"> hdInBytes </label>
 	<input id="object_hdInBytes" type="text" name="object.hdInBytes" value="${_object.hdInBytes}" size="5" />
-	<span class="crudHelp">Numeric.</span>
+	<span class="crudHelp"> </span>
 </div>
 
 

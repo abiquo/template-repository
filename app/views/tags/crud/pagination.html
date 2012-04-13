@@ -2,11 +2,11 @@
 %{ nbPages = _caller.count.page(controllers.CRUD.getPageSize()) }%
 
 <p class="crudCount">
-    &{'crud.list.size', _caller.count, _caller.type.name}
+    &{'crud.list.size', _caller.count, "templates"}
 </p>
 
 #{if nbPages > 1}
-    <p class="crudPages">
+    <p class="crudPages pagination pagination-right">
 
         %{
             limit = (_limit != null ? _limit : 10)
@@ -37,14 +37,18 @@
         #{/if}
 
         %{ for (i in start..end) { }%
-            <span class="page">
+            
                 #{if _caller.page == i}
-                    <strong>${i}</strong>
+                <span class="page active">
+                    #{a @list().add('page', i).add('search', _caller.params.search).add('orderBy', _caller.orderBy).add('order', _caller.order)}${i}#{/a}
+                </span>
                 #{/if}
                 #{else}
+                <span class="page">
                     #{a @list().add('page', i).add('search', _caller.params.search).add('orderBy', _caller.orderBy).add('order', _caller.order)}${i}#{/a}
+                </span>
                 #{/else}
-            </span>
+            
         %{ } }%
 
         #{if end < nbPages}

@@ -1,4 +1,32 @@
-<div id="crudListAdd">
-		<a href="@{OVFPackages.list()}">List</a>
-		<a href="@{OVFPackages.blank()}">Upload</a> 
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a class="brand" >Template Repository</a>      
+      <div class="nav-collapse">
+        <ul class="nav">
+          	<li class="active"><a href="@{OVFPackages.list()}">List</a></li>
+          	<li><a href="@{OVFPackages.blank()}">New</a></li>
+			<li><a> </a></li>
+                  
+			#{if session.get("user") != "notauthenticatedId"}                  
+        <li><img src="${session.get("gravatar")}" height="30" width="30"></li>        
+      #{/if}        
+      #{if session.get("user")}
+        <li><a href="@{Secure.logout()}">Logout</a></li>
+			#{/if}	  	  
+      #{else}
+        <li><a href="@{OVFPackages.login()}">Login</a></li>
+      #{/else}
+			<li><a> </a></li>
+			<li><a href="http://github.com/abiquo/template-repository/issues"><small>report issue</small></a></li>	
+        </ul>
+      </div><!--/.nav-collapse -->      
+    </div>
+  </div>
 </div>

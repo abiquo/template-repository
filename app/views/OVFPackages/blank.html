@@ -1,14 +1,5 @@
 #{extends 'OVFPackages/layout.html' /}
-
-<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/progress.css'}" />
-
-
-<script type="text/javascript" src="@{'/public/javascripts/upload.js'}" charset="utf-8"></script> 
-
-
 <script type="text/javascript">
-
-
 	function fileSelected()
 	{
 		var file = document.getElementById('diskFile').files[0];
@@ -35,8 +26,6 @@
 		}
 	} 
       
-      
-	
 	function urlSelected()
 	{
 		document.getElementById('diskFileSelector').style.display = 'none';
@@ -52,64 +41,41 @@
 		var url = document.getElementById('diskUrl').value;
 		document.getElementById('object_diskFilePath').value = url;
 	}
-
-
-            
 </script>
 
 
     <!-- Progress bar --> 
     <div id="progress_bar" class="ui-progress-bar ui-container" style="display: none;"> 
-      <div id="ui-progress" class="ui-progress" style="width: 0%;">
-      </div>       
-
-	</br>
-	
-    <div id="progess100" style="display: none;">
-		Processing on server
-    </div>
-	
+      	<div id="ui-progress" class="ui-progress" style="width: 0%;"></div>       
+		</br>
+    	<div id="progess100" style="display: none;"> Processing on server </div>	
     </div> 
 
-    
-
-
 <div id="crudBlank" class="${type.name}">
-	<!--  UPLOAD USING FILE -->
 
-	<div id="diskFileSelector" class="diskFileSelector">
-		Choose where is the Disk File
-
-		<div class="uploadOption" id="fileOption"> <!-- style="float: left;" -->
-			Local filesystem
-			<input id="diskFile" type="file" name="diskFile"  
-			onchange="fileSelected();" value="Enter local file path"/>
+	<div id="diskFileSelector" class="diskFileSelector span12">
+		<h3>Choose where is the Disk File</h3>
+		<br>
+		<div id="fileOption" 	class="well uploadOption controls span4">
+			<p class="help-block">Local filesystem</p>
+			<input id="diskFile" type="file" class="input-file" name="diskFile"  
+			onchange="fileSelected();" placeholder="Enter local file path"/>			
 		</div>
 
-		<div class="uploadOption" id="urlOption"> <!-- style="float: right;" -->
-			Remote disk file 		
-			<input id="diskUrl" type="text" name="diskUrl"
-			onChange="urlSelected();" value="Enter a file URL" size="50"/>				
+		<div id="urlOption" 	class="well uploadOption controls span4">
+			<p class="help-block">Remote URL</p>
+			<input id="diskUrl" type="text" class="input-xlarge" name="diskUrl" 
+			onChange="urlSelected();" placeholder="Enter a file URL" size="50"/>			
 		</div>	
 	 </div>
-
-
-	 <br/>
-
 
 	<form enctype="multipart/form-data" method="post" id="objectFormData">
 		<div id="objectForm"  style="display: none;">
 			#{ovfform object:object /}
 		</div>
 	</form>
-	
-	</br>
-	
-	<div class="startButton" id="startButton" style="display: none;">
-		<input type="button" onclick="startCreateOVF('@{OVFPackages.createOvf}');" value="Create Template"/>
+		
+	<div id="startButton" style="display: none;" class="span1">
+		<input class="btn btn-large btn-primary" type="button" onclick="startCreateOVF('@{OVFPackages.createOvf}');" value="Create Template"/>
 	</div>	
 </div><!-- crud_blank -->
-
-
-	</br>
-	</br>

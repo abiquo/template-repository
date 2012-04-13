@@ -3,32 +3,25 @@
     <head>
         <title>#{get 'title' /}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    	<link href="@{'/public/stylesheets/crud.css'}" 	rel="stylesheet" 	type="text/css" media="screen" />
-        <link href="@{'/public/images/favicon.ico'}" 	rel="shortcut icon" type="image/png">
-        
+        <link href="@{'/public/images/favicon.ico'}"     rel="shortcut icon" type="image/png">
+ 
+    	<link href="@{'/public/stylesheets/bootstrap-responsive.css'}" 	rel="stylesheet" 	type="text/css" media="screen" />
+        <link href="@{'/public/stylesheets/bootstrap.css'}"             rel="stylesheet"    type="text/css" media="screen" />
+        <link href="@{'/public/stylesheets/progress.css'}"              rel="stylesheet"    type="text/css" media="screen"  />
+
+        <script src="@{'/public/javascripts/bootstrap.js'}"         type="text/javascript" charset="utf-8"></script>        
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" 	type="text/javascript" charset="utf-8"></script>        
         <script src="@{'/public/javascripts/upload.js'}" 			type="text/javascript" charset="utf-8"></script> 
     </head>
     
 
     <body>
-    	<div id="crudHeader">
-    	<h1><a href="@{OVFPackages.list()}">Template Repository</a></h1>
-    	<!--
-			<h1><a href="@{OVFPackages.ovfindex()}">Template Repository</a></h1>
-		    #{navigation /}
-        -->
-        #{if session.get("user") != "notauthenticatedId"}            
-           <img src="${session.get("gravatar")}" height="30" width="30">
-        #{/if}
-        </div>
-    
-        <div id="main">
+        #{navigation /}
+        <br>
+        <br>
+        <br>
+        <div id="main" class="container">
 	    	#{doLayout /}
-		</div>
-    
-		<div id="crudFooter">
-			<a href="http://github.com/abiquo/template-repository/issues">report issue</a>
 		</div>
     </body>
 </html>

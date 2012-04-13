@@ -1,24 +1,5 @@
 #{extends 'OVFPackages/layout.html' /}
-<div id="crudListAdd">
-
-#{if session.get("user")}            
-	<a href="@{OVFPackages.blank()}">Upload</a>
-	#{if session.get("user") != "notauthenticatedId"}            
-		<a href="@{Secure.logout()}">Logout</a>
-	#{/if}
-#{/if}
-#{else}
-	<a href="@{AddOVFPackages.login()}">Login</a>
-#{/else}
-
-
-</div>
-  
-  
-            
-</br>
-<div id="crudList" class="${type.name}">
-	<h2 id="crudListTitle">List</h2>
+<div id="container crudList">
 
 	<div id="crudListTable">
 		#{crud.table fields:['name', 'diskFileFormat', 'categoryName', 'iconPath', 'userMail']}
@@ -27,7 +8,7 @@
 		   #{/crud.custom}
 		   #{crud.custom 'userMail'}
 		   		<img src="${object.gravatarCreator()}" height="50"	width="50"	alt="Angry face" />
-		   #{/crud.custom}
+			   #{/crud.custom}		   
 		#{/crud.table}   
 	</div>
 	

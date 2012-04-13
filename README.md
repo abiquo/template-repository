@@ -18,6 +18,8 @@ Running
 * Install [Play! Framework] (http://www.playframework.org)
 ** apt-get / brew 
 
+* get the dependencies 'play dependencies'
+
 * run 'play run template-repository/'
 
 * http://localhost:9000
