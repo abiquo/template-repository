@@ -23,6 +23,18 @@ import play.mvc.Router;
 @Entity
 public class OVFPackage extends Model
 {
+	 // DEFAULTS
+    private final static Integer CPU_DEFAULT = 1;
+
+    private final static Long RAM_DEFAULT = 512l;
+
+    private final static Long HD_DEFAULT = 2l;
+    
+    final static DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
+		.appendMonthOfYearShortText()
+		.appendDayOfMonth(2).appendLiteral('_')//
+		.appendHourOfDay(2).appendLiteral("-").appendMinuteOfHour(2).toFormatter();
+    
     @Required
     @Unique
     @MaxSize(256)
@@ -34,7 +46,7 @@ public class OVFPackage extends Model
 
     @MaxSize(1024)
     public String description;
-
+    
     @Required
     @Unique
     @MaxSize(512)
@@ -70,6 +82,25 @@ public class OVFPackage extends Model
     public EthernetDriver ethernetDriver;
 
     public Integer templateVersion;
+    
+    // more-info
+
+    public String user;
+    
+    public String password;
+    
+    @Enumerated(EnumType.STRING)    
+    public OSType osType;
+    
+    public String osVersion;
+    
+    @Enumerated(EnumType.STRING)
+    public DiskController diskController;
+    
+    /**
+     * 
+     * */
+    
 
     public void setTemplateVersion(final Integer templateVersion)
     {
@@ -80,13 +111,6 @@ public class OVFPackage extends Model
     {
         return templateVersion != null ? templateVersion : 0;    
     }
-
-    // DEFAULTS
-    private final static Integer CPU_DEFAULT = 1;
-
-    private final static Long RAM_DEFAULT = 512l;
-
-    private final static Long HD_DEFAULT = 2l;
 
     public Integer getCpu()
     {
@@ -107,29 +131,31 @@ public class OVFPackage extends Model
     {
         return getHdSizeUnit() == MemorySizeUnitType.BYTE ? getHd() : hdInBytes(getHd().doubleValue(), getHdSizeUnit());
     }
-
-    public static Long hdInBytes(final Double hd, final MemorySizeUnitType units)
+    public String getUser()
     {
-        Double hdB = hd;
-
-        switch (units)
-        {
-            case TB:
-                hdB = hdB * 1024;
-            case GB:
-                hdB = hdB * 1024;
-            case MB:
-                hdB = hdB * 1024;
-            case KB:
-                hdB = hdB * 1024;
-            default:
-                break;
-        }
-
-        return hdB.longValue();
-
+    	return user != null ? user : "user";
     }
-
+    
+    public String getPassword()
+    {
+    	return password != null ? password: "password";
+    }
+    
+    public DiskController getDiskController()
+    {
+    	return diskController != null ? diskController : DiskController.SCSI;
+    }
+    
+    public OSType getOsType()
+    {
+    	return osType != null ? osType : OSType.UNRECOGNIZED;
+    }
+    
+    public String getOsVersion()
+    {
+    	return osVersion != null ? osVersion : "";
+    }
+    
     public Long getRam()
     {
         return ram != null ? ram : RAM_DEFAULT;
@@ -167,11 +193,27 @@ public class OVFPackage extends Model
         this.ethernetDriver = ethernetDriver;
     }
     
-    final static DateTimeFormatter TIME_FORMATTER = new DateTimeFormatterBuilder()
-    .appendMonthOfYearShortText()
-    .appendDayOfMonth(2).appendLiteral('_')//
-    .appendHourOfDay(2).appendLiteral("-").appendMinuteOfHour(2).toFormatter();
+    public static Long hdInBytes(final Double hd, final MemorySizeUnitType units)
+    {
+        Double hdB = hd;
 
+        switch (units)
+        {
+            case TB:
+                hdB = hdB * 1024;
+            case GB:
+                hdB = hdB * 1024;
+            case MB:
+                hdB = hdB * 1024;
+            case KB:
+                hdB = hdB * 1024;
+            default:
+                break;
+        }
+
+        return hdB.longValue();
+
+    }
     
     public void unicNameOrAppendTimestamp() 
     {
@@ -192,21 +234,46 @@ public class OVFPackage extends Model
         }
     }
     
+    public boolean isDiskUrl()
+    {
+        return diskFilePath.startsWith("http://");
+    }
+
+    public void computeSimpleUnits(final long hdInBytes)
+    {
+        this.hd = hdInBytes / 1048576;
+        this.hdSizeUnit = MemorySizeUnitType.MB;
+    }
+    
+    public String gravatarCreator()
+    {
+        return userMail == null || userMail.equalsIgnoreCase("not authenticated")?"http://www.gravatar.com/avatar/default.jpeg"://
+            String.format("http://www.gravatar.com/avatar/%s.jpeg", Codec.hexMD5(userMail));
+    }
 
     public OVFPackage()
     {
 
     }
 
-    public OVFPackage(final String name, final String description,
-        final DiskFormatType diskFileFormat, final String diskFilePath, final Long diskFileSize,
-        final Integer cpu, final Long ram, final Long hd, final MemorySizeUnitType ramSizeUnit,
-        final MemorySizeUnitType hdSizeUnit, final String iconPath, final String categoryName,
-        final String user)
-    {
-        super();
+	public OVFPackage(final String name, final String description,
+			final DiskFormatType diskFileFormat, final String diskFilePath,
+			final Long diskFileSize, final Integer cpu, final Long ram,
+			final Long hd, final MemorySizeUnitType ramSizeUnit,
+			final MemorySizeUnitType hdSizeUnit, final String iconPath,
+			final String categoryName, final String userMail,
+			final String user, final String password,
+			final DiskController diskController, final OSType osType,
+			final String osVersion)
+	{
+		super();
 
-        this.userMail = user;
+        this.user = user;
+        this.password = password;
+        this.diskController = diskController;
+        this.osType = osType;
+        this.osVersion = osVersion;
+        this.userMail = userMail;
         this.name = name;
         this.diskFileFormat = diskFileFormat;
         this.description = description;
@@ -245,6 +312,87 @@ public class OVFPackage extends Model
         /* 2 */ VMXNET3
     }
 
+    public enum DiskController
+    {
+    	/* 0 */ IDE,
+    	/* 1 */ SCSI
+    }
+    
+    // https://raw.github.com/jclouds/jclouds/master/compute/src/main/java/org/jclouds/cim/OSType.java
+    public enum OSType
+    {
+    	OTHER(1, "Other", false),
+		MACOS(2, "MACOS", false),
+		SOLARIS(29, "Solaris", false),
+		LINUX(36, "LINUX", false),
+		FREEBSD(42, "FreeBSD", false),
+		NETBSD(43, "NetBSD", false),
+		OPENBSD(65, "OpenBSD", false),
+		NOT_APPLICABLE(66, "Not Applicable", false),
+		WINDOWS_SERVER_2003(69, "Microsoft Windows Server 2003", false),
+		WINDOWS_SERVER_2003_64(70, "Microsoft Windows Server 2003 64-Bit", true),
+		WINDOWS_SERVER_2008(76, "Microsoft Windows Server 2008", false),
+		WINDOWS_SERVER_2008_64(77, "Microsoft Windows Server 2008 64-Bit", true),
+		FREEBSD_64(78, "FreeBSD 64-Bit", true),
+		RHEL(79, "RedHat Enterprise Linux", false),
+		RHEL_64(80, "RedHat Enterprise Linux 64-Bit", true),
+		SOLARIS_64(81, "Solaris 64-Bit", true),
+		SUSE(82, "SUSE", false),
+		SUSE_64(83, "SUSE 64-Bit", true),
+		SLES(84, "SLES", false),
+		SLES_64(85, "SLES 64-Bit", true),
+		NOVELL_OES(86, "Novell OES", true),
+		MANDRIVA(89, "Mandriva", false),
+		MANDRIVA_64(90, "Mandriva 64-Bit", true),
+		TURBOLINUX(91, "TurboLinux", false),
+		TURBOLINUX_64(92, "TurboLinux 64-Bit", true),
+		UBUNTU(93, "Ubuntu", false),
+		UBUNTU_64(94, "Ubuntu 64-Bit", true),
+		DEBIAN(95, "Debian", false),
+		DEBIAN_64(96, "Debian 64-Bit", false),
+		LINUX_2_4(97, "Linux 2.4.x", false),
+		LINUX_2_4_64(98, "Linux 2.4.x 64-Bit", true),
+		LINUX_2_6(99, "Linux 2.6.x", false),
+		LINUX_2_6_64(100, "Linux 2.6.x 64-Bit", true),
+		LINUX_64(101, "Linux 64-Bit", true),
+		OTHER_64(102, "Other 64-Bit", true),
+		WINDOWS_SERVER_2008_R2(103, "Microsoft Windows Server 2008 R2", true),
+		ESXI(104, "VMware ESXi", true),
+		WINDOWS_7(105, "Microsoft Windows 7", false),
+		CENTOS(106, "CentOS 32-bit", false),
+		CENTOS_64(107, "CentOS 64-bit", true),
+		ORACLE_ENTERPRISE_LINUX(108, "Oracle Enterprise Linux 32-bit", false),
+		ORACLE_ENTERPRISE_LINUX_64(109, "Oracle Enterprise Linux 64-bit", true),
+		ECOMSTATION_32(109, "eComStation 32-bitx", false), 
+		UNRECOGNIZED(Integer.MAX_VALUE, "UNRECOGNIZED", true);
+    
+    	final int code;
+    	final String description;
+    	final boolean is64b;
+    	
+    	OSType(int code, String description, boolean is64b)
+    	{
+    		this.code = code;
+    		this.description = description;
+    		this.is64b = is64b;
+    	}
+    	
+		public int getCode()
+		{
+			return code;
+		}
+
+		public String getDescription()
+		{
+			return description;
+		}
+
+		public boolean is64Bit()
+		{
+			return is64b;
+		}
+    }
+    
     public enum DiskFormatType
     {
         /* 0 */UNKNOWN("http://unknown"),
@@ -278,24 +426,4 @@ public class OVFPackage extends Model
             return this.name();
         }
     }
-
-    public boolean isDiskUrl()
-    {
-        return diskFilePath.startsWith("http://");
-    }
-
-    public void computeSimpleUnits(final long hdInBytes)
-    {
-        this.hd = hdInBytes / 1048576;
-        this.hdSizeUnit = MemorySizeUnitType.MB;
-    }
-    
-    
-    public String gravatarCreator()
-    {
-        return userMail == null || userMail.equalsIgnoreCase("not authenticated")?"http://www.gravatar.com/avatar/default.jpeg"://
-            String.format("http://www.gravatar.com/avatar/%s.jpeg", Codec.hexMD5(userMail));
-    }
-
-
 }

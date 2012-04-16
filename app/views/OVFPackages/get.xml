@@ -29,10 +29,21 @@
 		<Info>A virtual machine</Info>
 		
 	  	<ProductSection>
-	    	<Info>${ovfpackage.name}</Info>
-            <Product>${ovfpackage.name}</Product>
+            <Product>${ovfpackage.name}</Product>            
+	    	<Info>${ovfpackage.description}</Info>
             <Icon ovf:fileRef="${ovfpackage.iconPath}" ovf:mimeType="image/jpeg" ovf:width="32" ovf:height="32" />        
+            <Property ovf:key="user" ovf:type="string" ovf:value="${ovfpackage.user}">
+                <Description>Default login username</Description>
+            </Property>
+            <Property ovf:key="password" ovf:type="string" ovf:value="${ovfpackage.password}">
+                <Description>Default login password</Description>
+            </Property>
        	</ProductSection>
+       	
+		<OperatingSystemSection ovf:id="${ovfpackage.getOsType().getCode()}" ovf:version="${ovfpackage.getOsVersion()}">
+      		<Info>The kind of installed guest operating system</Info>
+      		<Description>${ovfpackage.getOsType().getDescription()}</Description>
+    	</OperatingSystemSection>
 	
 		<VirtualHardwareSection>
 			<System>
@@ -53,19 +64,37 @@
 				<rasd:AllocationUnits>${ovfpackage.ramSizeUnit}</rasd:AllocationUnits>
 				<rasd:VirtualQuantity>${ovfpackage.ram}</rasd:VirtualQuantity>
 			</Item>
+
 			<Item>
-				<rasd:Caption>vNic Driver ${ovfpackage.ethernetDriver}</rasd:Caption>
-				<rasd:Description>Ethernet Adapter</rasd:Description>
-				<rasd:InstanceId>3</rasd:InstanceId>
-				<rasd:ResourceType>10</rasd:ResourceType>
-				<rasd:Connection>bridged</rasd:Connection>
-				<rasd:ResourceSubType>${ovfpackage.ethernetDriver}</rasd:ResourceSubType>
-			</Item>			
+				<rasd:InstanceID>3</rasd:InstanceID>
+				<rasd:Address>0</rasd:Address>
+			#{if "SCSI" == ovfpackage.getDiskController().name()}   
+				<rasd:Description>SCSI Controller</rasd:Description>
+				<rasd:ElementName>SCSI controller 0</rasd:ElementName>
+				<rasd:ResourceType>6</rasd:ResourceType>
+				<rasd:ResourceSubType>lsilogic</rasd:ResourceSubType>
+			#{/if}
+			#{else}
+				<rasd:Description>IDE Controller</rasd:Description>
+				<rasd:ElementName>IDE 1</rasd:ElementName>
+				<rasd:ResourceType>5</rasd:ResourceType>
+			#{/else}
+			</Item>
+			
 			<Item>
 				<rasd:Caption>Harddisk 0</rasd:Caption>
 				<rasd:InstanceId>11</rasd:InstanceId>
 				<rasd:ResourceType>17</rasd:ResourceType>
 				<rasd:HostResource>ovf:/disk/disk1</rasd:HostResource>
+				<rasd:Parent>3</rasd:Parent>
+			</Item>
+			<Item>
+				<rasd:Caption>vNic Driver ${ovfpackage.ethernetDriver}</rasd:Caption>
+				<rasd:Description>Ethernet Adapter</rasd:Description>
+				<rasd:InstanceId>4</rasd:InstanceId>
+				<rasd:ResourceType>10</rasd:ResourceType>
+				<rasd:Connection>bridged</rasd:Connection>
+				<rasd:ResourceSubType>${ovfpackage.ethernetDriver}</rasd:ResourceSubType>
 			</Item>
 		</VirtualHardwareSection>
 	</VirtualSystem>

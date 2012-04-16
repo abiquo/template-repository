@@ -58,14 +58,16 @@ function startCreateOVF(createUrl) {
 		fd.append("object.categoryName", document.getElementById('object_categoryName').value);
 		fd.append("object.iconPath",document.getElementById('object_iconPath').value);
         fd.append("object.ethernetDriver",document.getElementById('object_ethernetDriver').value);
-
-            
-
+        fd.append("object.user",document.getElementById('object_user').value);
+        fd.append("object.password",document.getElementById('object_password').value);        
+        fd.append("object.diskController",document.getElementById('object_diskController').value);
+        fd.append("object.osType",document.getElementById('object_osType').value);
+        fd.append("object.osVersion",document.getElementById('object_osVersion').value);		
+		            
 		if(diskFile)
 		{
 			fd.append("diskFile", diskFile);			
 		}
-
 
 		xhr.send(fd);
 	}

@@ -2,7 +2,7 @@
 <div class="span12">
 	<div>
 		#{if play.configuration.getProperty("show.gravatar")==true}
-			#{crud.table fields:['name', 'diskFileFormat', 'categoryName', 'iconPath', 'userMail']}
+			#{crud.table fields:['name', 'diskFileFormat', 'osType', 'categoryName', 'iconPath', 'userMail']}
 				#{crud.custom 'iconPath'}
 			   		<img src="${object.iconPath}" height="50"	width="50"	alt="Angry face" />
 				#{/crud.custom}
@@ -12,7 +12,7 @@
 			#{/crud.table}   
 		#{/if}
 		#{else}
-			#{crud.table fields:['name', 'diskFileFormat', 'categoryName', 'iconPath']}
+			#{crud.table fields:['name', 'diskFileFormat', 'osType', 'categoryName', 'iconPath']}
 				#{crud.custom 'iconPath'}
 			   		<img src="${object.iconPath}" height="50"	width="50"	alt="Angry face" />
 				#{/crud.custom}

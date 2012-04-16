@@ -14,11 +14,9 @@
 				<span class="crudHelp">Required</span>
 			 #{/else}
 			 			 
-			<br/>
 						
 			<label for="object_description">Description</label>
 			<textarea class="input-xxlarge" rows="3" id="object_description" type="text" name="object.description" value="${_object.description}" size="50">${_object.description}</textarea>
-
 			 #{ifError 'object.description'}
 				<span class="alert alert-error">#{error 'object.description' /}</span>			 
 			 #{/ifError}
@@ -26,8 +24,7 @@
 				<span class="crudHelp"></span>
 			 #{/else}
 			 
-			<br/>
-
+			
 			<label for="object_categoryName">Category</label>
 			<input id="object_categoryName" class="" type="text" name="object.categoryName" value="${_object.categoryName}" size="50"/>
 			#{ifError 'object.categoryName'}
@@ -37,8 +34,7 @@
 				<span class="crudHelp"></span>
 			#{/else}
 			 
-			<br/>
-
+			
 			<label for="object_iconPath">Icon URL</label>
 			<input id="object_iconPath" class="input-xxlarge" type="text" name="object.iconPath" value="${_object.iconPath}" size="50"/>
 			#{ifError 'object.iconPath'}
@@ -47,10 +43,114 @@
 			#{else}
 				<span class="crudHelp"></span>
 			#{/else}
-		
+
 		</div>
+
+		<div class="crudField crud_enum">
+			<label for="object_osType">OS Type</label>
+			<select class="input" id="object_osType" name="object.osType" value="${_object.osType.ordinal()} ${_object.osType.name()}"  >
+				<option name="OTHER"		ord="1" value="OTHER"			${_object.osType.getCode()==1 ? "selected" : ""}>OTHER</option>
+				<option name="MACOS"		ord="2" value="MACOS"			${_object.osType.getCode()==2 ? "selected" : ""}>MACOS</option>
+				<option name="SOLARIS"		ord="29" value="SOLARIS"			${_object.osType.getCode()==29 ? "selected" : ""}>SOLARIS</option>
+				<option name="LINUX"		ord="36" value="LINUX"			${_object.osType.getCode()==36 ? "selected" : ""}>LINUX</option>
+				<option name="FREEBSD"		ord="42" value="FREEBSD"			${_object.osType.getCode()==42 ? "selected" : ""}>FREEBSD</option>
+				<option name="NETBSD"		ord="43" value="NETBSD"			${_object.osType.getCode()==43 ? "selected" : ""}>NETBSD</option>
+				<option name="OPENBSD"		ord="65" value="OPENBSD"			${_object.osType.getCode()==65 ? "selected" : ""}>OPENBSD</option>
+				<option name="NOT_APPLICABLE"		ord="66" value="NOT_APPLICABLE"			${_object.osType.getCode()==66 ? "selected" : ""}>NOT_APPLICABLE</option>
+				<option name="WINDOWS_SERVER_2003"		ord="69" value="WINDOWS_SERVER_2003"			${_object.osType.getCode()==69 ? "selected" : ""}>WINDOWS_SERVER_2003</option>
+				<option name="WINDOWS_SERVER_2003_64"		ord="70" value="WINDOWS_SERVER_2003_64"			${_object.osType.getCode()==70 ? "selected" : ""}>WINDOWS_SERVER_2003_64</option>
+				<option name="WINDOWS_SERVER_2008"		ord="76" value="WINDOWS_SERVER_2008"			${_object.osType.getCode()==76 ? "selected" : ""}>WINDOWS_SERVER_2008</option>
+				<option name="WINDOWS_SERVER_2008_64"		ord="77" value="WINDOWS_SERVER_2008_64"			${_object.osType.getCode()==77 ? "selected" : ""}>WINDOWS_SERVER_2008_64</option>
+				<option name="FREEBSD_64"		ord="78" value="FREEBSD_64"			${_object.osType.getCode()==78 ? "selected" : ""}>FREEBSD_64</option>
+				<option name="RHEL"		ord="79" value="RHEL"			${_object.osType.getCode()==79 ? "selected" : ""}>RHEL</option>
+				<option name="RHEL_64"		ord="80" value="RHEL_64"			${_object.osType.getCode()==80 ? "selected" : ""}>RHEL_64</option>
+				<option name="SOLARIS_64"		ord="81" value="SOLARIS_64"			${_object.osType.getCode()==81 ? "selected" : ""}>SOLARIS_64</option>
+				<option name="SUSE"		ord="82" value="SUSE"			${_object.osType.getCode()==82 ? "selected" : ""}>SUSE</option>
+				<option name="SUSE_64"		ord="83" value="SUSE_64"			${_object.osType.getCode()==83 ? "selected" : ""}>SUSE_64</option>
+				<option name="SLES"		ord="84" value="SLES"			${_object.osType.getCode()==84 ? "selected" : ""}>SLES</option>
+				<option name="SLES_64"		ord="85" value="SLES_64"			${_object.osType.getCode()==85 ? "selected" : ""}>SLES_64</option>
+				<option name="NOVELL_OES"		ord="86" value="NOVELL_OES"			${_object.osType.getCode()==86 ? "selected" : ""}>NOVELL_OES</option>
+				<option name="MANDRIVA"		ord="89" value="MANDRIVA"			${_object.osType.getCode()==89 ? "selected" : ""}>MANDRIVA</option>
+				<option name="MANDRIVA_64"		ord="90" value="MANDRIVA_64"			${_object.osType.getCode()==90 ? "selected" : ""}>MANDRIVA_64</option>
+				<option name="TURBOLINUX"		ord="91" value="TURBOLINUX"			${_object.osType.getCode()==91 ? "selected" : ""}>TURBOLINUX</option>
+				<option name="TURBOLINUX_64"		ord="92" value="TURBOLINUX_64"			${_object.osType.getCode()==92 ? "selected" : ""}>TURBOLINUX_64</option>
+				<option name="UBUNTU"		ord="93" value="UBUNTU"			${_object.osType.getCode()==93 ? "selected" : ""}>UBUNTU</option>
+				<option name="UBUNTU_64"		ord="94" value="UBUNTU_64"			${_object.osType.getCode()==94 ? "selected" : ""}>UBUNTU_64</option>
+				<option name="DEBIAN"		ord="95" value="DEBIAN"			${_object.osType.getCode()==95 ? "selected" : ""}>DEBIAN</option>
+				<option name="DEBIAN_64"		ord="96" value="DEBIAN_64"			${_object.osType.getCode()==96 ? "selected" : ""}>DEBIAN_64</option>
+				<option name="LINUX_2_4"		ord="97" value="LINUX_2_4"			${_object.osType.getCode()==97 ? "selected" : ""}>LINUX_2_4</option>
+				<option name="LINUX_2_4_64"		ord="98" value="LINUX_2_4_64"			${_object.osType.getCode()==98 ? "selected" : ""}>LINUX_2_4_64</option>
+				<option name="LINUX_2_6"		ord="99" value="LINUX_2_6"			${_object.osType.getCode()==99 ? "selected" : ""}>LINUX_2_6</option>
+				<option name="LINUX_2_6_64"		ord="100" value="LINUX_2_6_64"			${_object.osType.getCode()==100 ? "selected" : ""}>LINUX_2_6_64</option>
+				<option name="LINUX_64"		ord="101" value="LINUX_64"			${_object.osType.getCode()==101 ? "selected" : ""}>LINUX_64</option>
+				<option name="OTHER_64"		ord="102" value="OTHER_64"			${_object.osType.getCode()==102 ? "selected" : ""}>OTHER_64</option>
+				<option name="WINDOWS_SERVER_2008_R2"		ord="103" value="WINDOWS_SERVER_2008_R2"			${_object.osType.getCode()==103 ? "selected" : ""}>WINDOWS_SERVER_2008_R2</option>
+				<option name="ESXI"		ord="104" value="ESXI"			${_object.osType.getCode()==104 ? "selected" : ""}>ESXI</option>
+				<option name="WINDOWS_7"		ord="105" value="WINDOWS_7"			${_object.osType.getCode()==105 ? "selected" : ""}>WINDOWS_7</option>
+				<option name="CENTOS"		ord="106" value="CENTOS"			${_object.osType.getCode()==106 ? "selected" : ""}>CENTOS</option>
+				<option name="CENTOS_64"		ord="107" value="CENTOS_64"			${_object.osType.getCode()==107 ? "selected" : ""}>CENTOS_64</option>
+				<option name="ORACLE_ENTERPRISE_LINUX"		ord="108" value="ORACLE_ENTERPRISE_LINUX"			${_object.osType.getCode()==108 ? "selected" : ""}>ORACLE_ENTERPRISE_LINUX</option>
+				<option name="ORACLE_ENTERPRISE_LINUX_64"		ord="109" value="ORACLE_ENTERPRISE_LINUX_64"			${_object.osType.getCode()==109 ? "selected" : ""}>ORACLE_ENTERPRISE_LINUX_64</option>
+				<option name="ECOMSTATION_32"		ord="109" value="ECOMSTATION_32"			${_object.osType.getCode()==109 ? "selected" : ""}>ECOMSTATION_32</option>
+				<option name="UNRECOGNIZED"		ord="2147483647" value="UNRECOGNIZED"			${_object.osType.getCode()==2147483647 ? "selected" : ""}>UNRECOGNIZED</option>
+
+			</select>		
+			#{ifError 'object.osType'}
+				<span class="alert alert-error">#{error 'object.osType' /}</span>
+			#{/ifError}
+			#{else}
+				<span class="crudHelp"></span>
+			#{/else}		
+		</div>
+
+		<div class="crudField crud_text">
+			<label for="object_osVersion">OS Version</label>
+			<input class="input" id="object_osVersion" type="text" name="object.osVersion" value="${_object.osVersion}"/>
+			#{ifError 'object.osVersion'}
+				<span class="alert alert-error">#{error 'object.osVersion' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">  </span>				
+			#{/else}			
+		</div>
+
+
 	</fieldset> 
 	
+
+
+	<fieldset class="well">
+		<legend>Access</legend> 
+
+		<div class="crudField crud_text">
+			<label for="object_user">User</label>
+			<input class="input" id="object_user" type="text" name="object.user" value="${_object.user}"/>
+			#{ifError 'object.user'}
+				<span class="alert alert-error">#{error 'object.user' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">  </span>				
+			#{/else}			
+		</div>
+
+		<div class="crudField crud_text">
+			<label for="object_password">Password</label>
+			<input class="input" id="object_password" type="text" name="object.password" value="${_object.password}"/>
+			#{ifError 'object.password'}
+				<span class="alert alert-error">#{error 'object.password' /}</span>			 		
+			#{/ifError}
+			#{else}
+				<span class="crudHelp">  </span>				
+			#{/else}			
+		</div>
+
+	</fieldset>		
+
+
+
+
+
+
 	
 	<fieldset class="well">
 		<legend>System Requirements</legend> 
@@ -106,14 +206,29 @@
 				<option name="PCNet32" 	ord="1" value="PCNet32" 	${_object.ethernetDriver.ordinal()==1 ? "selected" : ""}>PCNet32</option>
 				<option name="VMXNET3" 	ord="2" value="VMXNET3" 	${_object.ethernetDriver.ordinal()==2 ? "selected" : ""}>VMXNET3</option>
 			</select>
-		
-			#{ifError 'object.diskFileFormat'}
-				<span class="alert alert-error">#{error 'object.diskFileFormat' /}</span>
+			#{ifError 'object.ethernetDriver'}
+				<span class="alert alert-error">#{error 'object.ethernetDriver' /}</span>
 			#{/ifError}
 			#{else}
-				<span class="crudHelp">Required</span>
+				<span class="crudHelp"></span>
+			#{/else}		
+		</div>
+		
+
+		<div class="crudField crud_enum">
+			<label for="object_diskController">Disk Controller</label>
+			<select class="input-mini" id="object_diskController" name="object.diskController" value="${_object.diskController.ordinal()} ${_object.diskController.name()}"  onchange=formatChange(value);>
+				<option name="IDE" 	ord="0" value="IDE" 	${_object.diskController.ordinal()==0 ? "selected" : ""}>IDE</option>
+				<option name="SCSI" ord="1" value="SCSI" 	${_object.diskController.ordinal()==1 ? "selected" : ""}>SCSI</option>	
+			</select>		
+			#{ifError 'object.diskController'}
+				<span class="alert alert-error">#{error 'object.diskController' /}</span>
+			#{/ifError}
+			#{else}
+				<span class="crudHelp"></span>
 			#{/else}		
 		</div>	
+			
 	</fieldset> 
 
 <div id="autofill">
@@ -135,7 +250,7 @@
 		
 		<div class="crudField crud_number">
 			<label for="object_diskFileSize">Size</label>
-			<input class="input-small" id="object_diskFileSize" type="text" name="object.diskFileSize" value="${_object.diskFileSize}" size="50" /> 			
+			<input class="input-small" id="object_diskFileSize" type="text" name="object.diskFileSize" value="${_object.diskFileSize}" size="50" />
 			#{ifError 'object.diskFileSize'}
 				<span class="alert alert-error">#{error 'object.diskFileSize' /}</span>
 			#{/ifError}
@@ -148,41 +263,18 @@
 			<label for="object_diskFileFormat">Format</label>		
 			<select class="input-small" id="object_diskFileFormat" name="object.diskFileFormat" value="${_object.diskFileFormat.ordinal()}  ${_object.diskFileFormat.name()}" 
 			onchange=formatChange(value);>
-				<option name="UNKNOWN" ord="0" value="UNKNOWN"
-				${_object.diskFileFormat.ordinal()==0 ? "selected" : ""}>UNKNOWN</option>
-
-				<option name="RAW" ord="1" value="RAW"
-				${_object.diskFileFormat.ordinal()==1 ? "selected" : ""}>RAW</option>
-
-				<option name="INCOMPATIBLE" ord="2" value="INCOMPATIBLE"
-				${_object.diskFileFormat.ordinal()==2 ? "selected" : ""}>INCOMPATIBLE</option>
-
-				<option name="VMDK_STREAM_OPTIMIZED" ord="3" value="VMDK_STREAM_OPTIMIZED"
-				${_object.diskFileFormat.ordinal()==3 ? "selected" : ""}>VMDK_STREAM_OPTIMIZED</option>
-
-				<option name="VMDK_FLAT" ord="4" value="VMDK_FLAT"
-				${_object.diskFileFormat.ordinal()==4 ? "selected" : ""}>VMDK_FLAT</option>
-
-				<option name="VMDK_SPARSE" ord="5" value="VMDK_SPARSE"
-				${_object.diskFileFormat.ordinal()==5 ? "selected" : ""}>VMDK_SPARSE</option>
-
-				<option name="VHD_FLAT" ord="6" value="VHD_FLAT"
-				${_object.diskFileFormat.ordinal()==6 ? "selected" : ""}>VHD_FLAT</option>
-
-				<option name="VHD_SPARSE" ord="7" value="VHD_SPARSE"
-				${_object.diskFileFormat.ordinal()==7 ? "selected" : ""}>VHD_SPARSE</option>
-
-				<option name="VDI_FLAT" ord="8" value="VDI_FLAT"
-				${_object.diskFileFormat.ordinal()==8 ? "selected" : ""}>VDI_FLAT</option>
-
-				<option name="VDI_SPARSE" ord="9" value="VDI_SPARSE"
-				${_object.diskFileFormat.ordinal()==9 ? "selected" : ""}>VDI_SPARSE</option>
-
-				<option name="QCOW2_FLAT" ord="10" value="QCOW2_FLAT"
-				${_object.diskFileFormat.ordinal()==10 ? "selected" : ""}>QCOW2_FLAT</option>
-
-				<option name="QCOW2_SPARSE" ord="11" value="QCOW2_SPARSE"
-				${_object.diskFileFormat.ordinal()==11 ? "selected" : ""}>QCOW2_SPARSE</option>
+				<option name="UNKNOWN" 		ord="0" value="UNKNOWN" 	${_object.diskFileFormat.ordinal()==0 ? "selected" : ""}>UNKNOWN</option>
+				<option name="RAW" 			ord="1" value="RAW" 		${_object.diskFileFormat.ordinal()==1 ? "selected" : ""}>RAW</option>
+				<option name="INCOMPATIBLE" ord="2" value="INCOMPATIBLE" ${_object.diskFileFormat.ordinal()==2 ? "selected" : ""}>INCOMPATIBLE</option>
+				<option name="VMDK_STREAM_OPTIMIZED" ord="3" value="VMDK_STREAM_OPTIMIZED" ${_object.diskFileFormat.ordinal()==3 ? "selected" : ""}>VMDK_STREAM_OPTIMIZED</option>
+				<option name="VMDK_FLAT" 	ord="4" value="VMDK_FLAT" 	${_object.diskFileFormat.ordinal()==4 ? "selected" : ""}>VMDK_FLAT</option>
+				<option name="VMDK_SPARSE" 	ord="5" value="VMDK_SPARSE" ${_object.diskFileFormat.ordinal()==5 ? "selected" : ""}>VMDK_SPARSE</option>
+				<option name="VHD_FLAT" 	ord="6" value="VHD_FLAT" 	${_object.diskFileFormat.ordinal()==6 ? "selected" : ""}>VHD_FLAT</option>
+				<option name="VHD_SPARSE" 	ord="7" value="VHD_SPARSE" 	${_object.diskFileFormat.ordinal()==7 ? "selected" : ""}>VHD_SPARSE</option>
+				<option name="VDI_FLAT" 	ord="8" value="VDI_FLAT" 	${_object.diskFileFormat.ordinal()==8 ? "selected" : ""}>VDI_FLAT</option>
+				<option name="VDI_SPARSE" 	ord="9" value="VDI_SPARSE" 	${_object.diskFileFormat.ordinal()==9 ? "selected" : ""}>VDI_SPARSE</option>
+				<option name="QCOW2_FLAT" 	ord="10" value="QCOW2_FLAT" ${_object.diskFileFormat.ordinal()==10 ? "selected" : ""}>QCOW2_FLAT</option>
+				<option name="QCOW2_SPARSE" ord="11" value="QCOW2_SPARSE" ${_object.diskFileFormat.ordinal()==11 ? "selected" : ""}>QCOW2_SPARSE</option>
 			</select>		
 			#{ifError 'object.diskFileFormat'}
 				<span class="alert alert-error">#{error 'object.diskFileFormat' /}</span>
@@ -190,7 +282,8 @@
 			#{else}
 				<span class="crudHelp"> Required </span>
 			#{/else}		
-		</div>		
+		</div>
+		
 	</fieldset> 
 </div><!-- autofill-->		
 	
