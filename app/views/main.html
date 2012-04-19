@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="${lang}" lang="${lang}">
     <head>
-        <title>#{get 'title' /}</title>
+        <title>Template Repository</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="@{'/public/images/favicon.ico'}"     rel="shortcut icon" type="image/png">
  
@@ -12,16 +12,18 @@
         <script src="@{'/public/javascripts/bootstrap.js'}"         type="text/javascript" charset="utf-8"></script>        
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" 	type="text/javascript" charset="utf-8"></script>        
         <script src="@{'/public/javascripts/upload.js'}" 			type="text/javascript" charset="utf-8"></script> 
-    </head>
-    
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+        body
+        {
+           padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+        </style>
+    </head>
     <body>
-        #{navigation /}
-        <br>
-        <br>
-        <br>
-        <div id="main" class="container">
-	    	#{doLayout /}
-		</div>
+        #{navigation /}        
+        #{doLayout /}		
     </body>
 </html>

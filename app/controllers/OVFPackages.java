@@ -50,11 +50,26 @@ public class OVFPackages extends CRUD
             return;
         }
 
-        Future<DiskId> invoc = DiskID.useDiskId(diskFile);
+        if(diskFile == null)
+        {
+        	response.status = 500;
+            renderText("No template disk provided");
+            return;
+        }
+        
+        try
+        {
+	        Future<DiskId> invoc = DiskID.useDiskId(diskFile);
+	
+	        DiskId diskId = await(invoc);
+	        
+	        applyDiskId(object, diskId);
+        }
+        catch (Exception e) 
+        {
+            play.Logger.error(e, "Can't use DiskID to guess the format");
+		}
 
-        DiskId diskId = await(invoc);
-
-        applyDiskId(object, diskId);
 
         object.diskFilePath = FilenameUtils.concat(getRepositoryLocation(), //
             object.name + '.' + FilenameUtils.getExtension(diskFile.getName()));
@@ -373,6 +388,9 @@ public class OVFPackages extends CRUD
                     .required("lastname", "http://axschema.org/namePerson/last")
                     .required("email", "http://schema.openid.net/contact/email").verify();
                 UserInfo verifiedUser = OpenID.getVerifiedID();
+
+                play.Logger.info("Verified user %s", verifiedUser.id);
+
                 login();
             }
         }

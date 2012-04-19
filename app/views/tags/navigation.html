@@ -25,9 +25,6 @@
           #{if session.get("user")}
             <a href="@{Secure.logout()}">logout</a>
           #{/if}        
-          #{else}
-            <a href="@{OVFPackages.login()}">login</a>
-          #{/else}
         </div>
       </div><!--/.nav-collapse -->
     </div>
