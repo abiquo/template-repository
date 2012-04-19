@@ -1,7 +1,7 @@
 #{extends 'OVFPackages/layout.html' /}
 
-<div id="crudShow" class="${type.name} container">
-	<div class="crudButtons" class="well">
+<div class="container span9">
+	<div>
 		#{form action:@save(object._key()), enctype:'multipart/form-data'}
 			#{ovfform object:object /}
 				<input class="btn" type="submit" name="_save" value="&{'crud.save', type.modelName}" />
@@ -9,8 +9,7 @@
 		#{/form}
 		
 		#{form @delete(object._key())}
-				<input class="btn btn-danger" type="submit" value="&{'crud.delete', type.modelName}" style="float: right;"/>
+				<input class="btn btn-danger" type="submit" value="&{'crud.delete', "template"}" />
 		#{/form}
 	</div>
-
 </div>

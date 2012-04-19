@@ -1,22 +1,21 @@
 #{extends 'main.html' /}
 <body id="crud" class="container">
 	#{if flash.success}
-		<div class="alert alert-success">
+		<div class="alert alert-success span4">
 			${flash.success}
 		</div>
 	#{/if}
 	#{if flash.error || error}
-		<div class="alert alert-error">
+		<div class="alert alert-error span4">
 			${error ?: flash.error}
 		</div>
 	#{/if}
 	
-	<div id="uploadFlashSuccess" class="alert alert-error crudFlash flashSuccess" 	style="display: none;"> template created
-	</div>
-	<div id="uploadFlashFail" 	class="alert alert-error crudFlash flashError" 		style="display: none;"> template fail
+	<div id="uploadFlashSuccess" class="alert alert-error crudFlash flashSuccess span4" style="display: none;"> template created</div>
+	<div id="uploadFlashFail"    class="alert alert-error crudFlash flashError   span4" style="display: none;"> template fail
 		<a id="uploadFlashFailDetail"></a>    			
 	</div>
-
+	
 	<div id="container">
 		#{doLayout /}
 	</div>

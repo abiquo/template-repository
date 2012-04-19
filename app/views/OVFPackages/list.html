@@ -1,7 +1,6 @@
 #{extends 'OVFPackages/layout.html' /}
-<div id="container crudList">
-
-	<div id="crudListTable">
+<div class="span12">
+	<div>
 		#{if play.configuration.getProperty("show.gravatar")==true}
 			#{crud.table fields:['name', 'diskFileFormat', 'categoryName', 'iconPath', 'userMail']}
 				#{crud.custom 'iconPath'}
@@ -19,13 +18,8 @@
 				#{/crud.custom}
 			#{/crud.table}   
 		#{/else}
-	</div>
-	
-	<div id="crudListPagination">
+	</div>	
+	<div class="pull-right">
 		#{crud.pagination /}
 	</div>
-
-	<div id="crudListSearch">
-		#{crud.search /}
-	</div>	
 </div>

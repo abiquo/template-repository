@@ -250,21 +250,15 @@ public class OVFPackage extends Model
         /* 0 */UNKNOWN("http://unknown"),
         /* 1 */RAW("http://raw"),
         /* 2 */INCOMPATIBLE("http://incompatible"),
-        /* 3 */VMDK_STREAM_OPTIMIZED(
-            "http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#streamOptimized"),
-        /* 4 */VMDK_FLAT(
-            "http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#monolithic_flat"),
-        /* 5 */VMDK_SPARSE(
-            "http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#monolithic_sparse"),
-        /* 6 */VHD_FLAT(
-            "http://technet.microsoft.com/en-us/virtualserver/bb676673.aspx#monolithic_flat"),
-        /* 7 */VHD_SPARSE(
-            "http://technet.microsoft.com/en-us/virtualserver/bb676673.aspx#monolithic_sparse"),
+        /* 3 */VMDK_STREAM_OPTIMIZED("http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#streamOptimized"),
+        /* 4 */VMDK_FLAT("http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#monolithic_flat"),
+        /* 5 */VMDK_SPARSE("http://www.vmware.com/technical-resources/interfaces/vmdk_access.html#monolithic_sparse"),
+        /* 6 */VHD_FLAT("http://technet.microsoft.com/en-us/virtualserver/bb676673.aspx#monolithic_flat"),
+        /* 7 */VHD_SPARSE("http://technet.microsoft.com/en-us/virtualserver/bb676673.aspx#monolithic_sparse"),
         /* 8 */VDI_FLAT("http://forums.virtualbox.org/viewtopic.php?t=8046#monolithic_flat"),
         /* 9 */VDI_SPARSE("http://forums.virtualbox.org/viewtopic.php?t=8046#monolithic_sparse"),
         /* 10 */QCOW2_FLAT("http://people.gnome.org/~markmc/qcow-image-format.html#monolithic_flat"),
-        /* 11 */QCOW2_SPARSE(
-            "http://people.gnome.org/~markmc/qcow-image-format.html#monolithic_sparse");
+        /* 11 */QCOW2_SPARSE("http://people.gnome.org/~markmc/qcow-image-format.html#monolithic_sparse");
 
         private final String url;
 

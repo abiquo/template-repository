@@ -5,8 +5,7 @@
 			
 			<img src="${_object.iconPath}" height="50"	width="50"	alt="Angry face" style="float: right;">
 
-			<label for="object_name">Name</label>
-		    
+			<label for="object_name">Name</label>		    
 			<input id="object_name" class="" type="text" name="object.name" value="${_object.name}" size="50" />			
 			 #{ifError 'object.name'}
 				<span class="alert alert-error">#{error 'object.name' /}</span>
@@ -18,7 +17,7 @@
 			<br/>
 						
 			<label for="object_description">Description</label>
-			<textarea class="input-xxlarge" rows="5" id="object_description" type="text" name="object.description" value="${_object.description}" size="50">${_object.description}</textarea>
+			<textarea class="input-xxlarge" rows="3" id="object_description" type="text" name="object.description" value="${_object.description}" size="50">${_object.description}</textarea>
 
 			 #{ifError 'object.description'}
 				<span class="alert alert-error">#{error 'object.description' /}</span>			 
@@ -55,7 +54,6 @@
 	
 	<fieldset class="well">
 		<legend>System Requirements</legend> 
-
 		<div class="crudField crud_number">
 			<label for="object_cpu">CPU</label>
 			<input class="input-mini" id="object_cpu" type="text" name="object.cpu" value="${_object.cpu}" size="5" />
