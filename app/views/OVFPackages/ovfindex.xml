@@ -17,7 +17,7 @@
 			#{/else}
 
 				ns2:DiskFormat="${ovfpackage.diskFileFormat}"
-				ns2:DiskSize="${ovfpackage.diskFileSize}"
+				ns2:DiskSize="${(int)ovfpackage.diskFileSize/1048576}"
 
 				ns2:OVFCategories="${ovfpackage.categoryName}" 
                 ns1:instance="" ns1:class="">
