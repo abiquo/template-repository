@@ -225,6 +225,12 @@ public class OVFPackages extends CRUD
         object.hdInBytes = diskId.hdBytes;
         object.computeSimpleUnits(diskId.hdBytes);
 
+        if(object.hd == 0) // diskId with raw return 2.0K then use the raw size
+        {
+        	object.hdInBytes = object.diskFileSize;
+        	object.computeSimpleUnits(object.diskFileSize);
+        }
+        
         play.Logger.info("DiskID %s\t %d\tMb", object.diskFileFormat.name(), object.hd);
     }
     
