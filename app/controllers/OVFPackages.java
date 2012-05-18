@@ -67,7 +67,7 @@ public class OVFPackages extends CRUD
         }
         catch (Exception e) 
         {
-            play.Logger.error(e, "Can't use DiskID to guess the format");
+            play.Logger.error(e, "Can't use DiskID to determine the format");
 		}
 
 
@@ -79,7 +79,7 @@ public class OVFPackages extends CRUD
         if (new File(object.diskFilePath).exists())
         {
             response.status = 500;
-            renderText("path already exist" + object.diskFilePath);
+            renderText("path already exists" + object.diskFilePath);
             return;
         }
 
@@ -114,7 +114,7 @@ public class OVFPackages extends CRUD
         catch (IOException e1)
         {
             response.status = 404;
-            renderText("Url not found " + object.diskFilePath);
+            renderText("URL not found " + object.diskFilePath);
             // response.status = StatusCode.BAD_REQUEST; //NOT_FOUND
             // renderText("Invalid template disk file URL : " + e1.getMessage());
         }
@@ -308,7 +308,7 @@ public class OVFPackages extends CRUD
 
         if (!new File(path).exists())
         {
-            throw new RuntimeException("repository folder do not exist " + path);
+            throw new RuntimeException("repository folder does not exist " + path);
         }
 
         return path.endsWith("/") ? path : path.concat("/");
@@ -365,7 +365,7 @@ public class OVFPackages extends CRUD
                 String userEmail = verifiedUser.extensions.get("email");
                 if (!userEmail.endsWith(domain))
                 {
-                    flash.error("You must have an " + domain + " account to login");
+                    flash.error("You must have an " + domain + " account to log in");
                     login();
                 }
                 else
