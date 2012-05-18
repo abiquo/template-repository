@@ -10,8 +10,8 @@ Running from package
 * put in the webapps folder of your favorite apps container (e.g. Tomcat)
 
 
-Running
-------------
+Running with Play! Framework
+---------------------------------
 
 * checkout the code 'git clone git://github.com/abiquo/template-repository.git'
 
@@ -29,7 +29,7 @@ Configuration
 Edit the 'template-repository/conf/application.conf' file:
 
 * ovfcatalog.repositoryPath: directory where the disk files are stored. (/opt/template_repository by default)
-* by default uses embeded filesystem database 
+* by default uses embedded filesystem database (db=fs)
 ** db: database connection. (db=mysql:root:root@templaterepository)
 ** also use ''jpa.ddl=create'' for the first run
 
