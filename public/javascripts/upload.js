@@ -72,7 +72,7 @@ function startCreateOVF(createUrl) {
 	else
 	{
 		document.getElementById("uploadFlashFail").style.display= 'block';
-		document.getElementById("uploadFlashFail").innerHTML= "you browser is not supported, use Chrome or Firefox 4.";
+		document.getElementById("uploadFlashFail").innerHTML= "your browser is not supported, please use Chrome or Firefox 4.";
 	}
 }
 
@@ -94,7 +94,7 @@ function uploadProgress(evt)
 		if(progress >= 98)
 		{
 			document.getElementById("progess100").style.display = 'block';        
-			document.getElementById("progess100").innerHTML = "Guessing the virtual disk format ...";	
+			document.getElementById("progess100").innerHTML = "Determining the virtual disk format ...";	
 			
 
 			//document.getElementById("ui-progress").style.display= "none";
@@ -118,7 +118,7 @@ function uploadProgress(evt)
 	else
 	{
 		document.getElementById("progess100").style.display = 'block';        
-		document.getElementById("progess100").innerHTML = "can not compute progress";		
+		document.getElementById("progess100").innerHTML = "cannot compute progress";		
 	}
 }
 
