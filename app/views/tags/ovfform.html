@@ -243,7 +243,12 @@
 			#{/ifError}
 			#{else}
 				<span class="crudHelp">
-				<a class="btn-mini btn-info" href="@@{OVFPackages.getRepository(_object.diskFilePath)}">Download</a>		
+				#{if !_object.isDiskUrl()}
+				    <a class="btn-mini btn-info" href="@@{OVFPackages.getRepository(_object.getSimpleFileName())}">Download</a>
+			    #{/if}
+                #{else}
+                    <a class="btn-mini btn-info" href="@@{OVFPackages.getRepository(_object.diskFilePath)}">Download</a>
+                #{/else}					
 				</span>
 			#{/else}            
 		</div>

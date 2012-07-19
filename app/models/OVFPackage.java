@@ -250,6 +250,12 @@ public class OVFPackage extends Model
         return userMail == null || userMail.equalsIgnoreCase("not authenticated")?"http://www.gravatar.com/avatar/default.jpeg"://
             String.format("http://www.gravatar.com/avatar/%s.jpeg", Codec.hexMD5(userMail));
     }
+    
+    
+    public String getSimpleFileName()
+    {
+        return FilenameUtils.getName(diskFilePath);
+    }
 
     public OVFPackage()
     {

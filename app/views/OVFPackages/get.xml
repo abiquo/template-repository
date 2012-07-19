@@ -10,7 +10,7 @@
 		<File ovf:href="${ovfpackage.diskFilePath}" 
 	#{/if}
 	#{else}
-		<File ovf:href="@@{OVFPackages.getRepository(ovfpackage.diskFilePath)}"
+		<File ovf:href="@@{OVFPackages.getRepository(ovfpackage.getSimpleFileName())}"
 	#{/else}
 		ovf:id="file1" ovf:size="${ovfpackage.diskFileSize}" />		
 	</References>
