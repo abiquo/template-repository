@@ -236,7 +236,7 @@ public class OVFPackage extends Model
     
     public boolean isDiskUrl()
     {
-        return diskFilePath.startsWith("http://");
+        return diskFilePath!= null && diskFilePath.startsWith("http://");
     }
 
     public void computeSimpleUnits(final long hdInBytes)
