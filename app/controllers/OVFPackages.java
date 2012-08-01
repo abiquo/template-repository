@@ -282,7 +282,7 @@ public class OVFPackages extends CRUD
 
     public static void getByName(final String name)
     {
-        OVFPackage ovfpackage = (OVFPackage) OVFPackage.find("byName", name).first();
+        OVFPackage ovfpackage = (OVFPackage) OVFPackage.find("byNameUrl", name).first();
         notFoundIfNull(ovfpackage);
 
         renderTemplate("OVFPackages/get.xml", ovfpackage);

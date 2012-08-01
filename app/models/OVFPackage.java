@@ -1,6 +1,7 @@
 package models;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 import javax.persistence.Entity;
@@ -36,7 +37,6 @@ public class OVFPackage extends Model
 		.appendHourOfDay(2).appendLiteral("-").appendMinuteOfHour(2).toFormatter();
     
     @Required
-    @Unique
     @MaxSize(256)
     public String name;
 
@@ -100,6 +100,10 @@ public class OVFPackage extends Model
     /**
      * 
      * */
+    @Required
+    @Unique
+    @MaxSize(256)
+    public String nameUrl;
     
 
     public void setTemplateVersion(final Integer templateVersion)
@@ -188,6 +192,11 @@ public class OVFPackage extends Model
         return ethernetDriver != null ? ethernetDriver : EthernetDriver.E1000;
     }
 
+    public String getNameUrl()
+    {
+        return nameUrl != null ? nameUrl : name;
+    }
+
     public void setEthernetDriver(final EthernetDriver ethernetDriver)
     {
         this.ethernetDriver = ethernetDriver;
@@ -220,7 +229,7 @@ public class OVFPackage extends Model
         // remove extension from default name (file name)
         try
         {
-            name =  URLEncoder.encode(FilenameUtils.getBaseName(name), "UTF-8");
+            nameUrl =  URLEncoder.encode(FilenameUtils.getBaseName(name), "UTF-8");
         }
         catch (UnsupportedEncodingException e)
         {
@@ -228,9 +237,9 @@ public class OVFPackage extends Model
         }
 
         // check name is unique or append time-stamp
-        if (find("name", name).first() != null)
+        if (find("name", nameUrl).first() != null)
         {
-            name = name +"_"+new DateTime().toString(TIME_FORMATTER);
+            nameUrl = nameUrl +"_"+new DateTime().toString(TIME_FORMATTER);
         }
     }
     
@@ -281,6 +290,7 @@ public class OVFPackage extends Model
         this.osVersion = osVersion;
         this.userMail = userMail;
         this.name = name;
+        this.nameUrl = name;
         this.diskFileFormat = diskFileFormat;
         this.description = description;
         this.diskFilePath = diskFilePath;
@@ -431,5 +441,5 @@ public class OVFPackage extends Model
         {
             return this.name();
         }
-    }
+    }    
 }

@@ -13,7 +13,7 @@
 				ns2:OVFFile="@@{OVFPackages.get(id:ovfpackage.id)}"
 			#{/if}
 			#{else}
-				ns2:OVFFile="@@{OVFPackages.getByName(name:ovfpackage.name)}"				
+				ns2:OVFFile="@@{OVFPackages.getByName(name:ovfpackage.nameUrl)}"
 			#{/else}
 
 				ns2:DiskFormat="${ovfpackage.diskFileFormat}"
