@@ -1,6 +1,8 @@
 package models;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -14,6 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
+import play.data.parsing.UrlEncodedParser;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Unique;
@@ -261,9 +264,10 @@ public class OVFPackage extends Model
     }
     
     
-    public String getSimpleFileName()
+    public String getSimpleFileName() throws UnsupportedEncodingException
     {
-        return FilenameUtils.getName(diskFilePath);
+		return URLEncoder.encode(FilenameUtils.getName(diskFilePath), "UTF-8")
+				.replace("+", "%20"); // application/x-www-form-urlencoded
     }
 
     public OVFPackage()
