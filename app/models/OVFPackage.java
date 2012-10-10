@@ -265,8 +265,9 @@ public class OVFPackage extends Model
     
     
     public String getSimpleFileName() throws UnsupportedEncodingException
-    {
-		return URLEncoder.encode(FilenameUtils.getName(diskFilePath), "UTF-8")
+    {        
+		return diskFilePath == null ? "" : 
+		    URLEncoder.encode(FilenameUtils.getName(diskFilePath), "UTF-8")
 				.replace("+", "%20"); // application/x-www-form-urlencoded
     }
 
