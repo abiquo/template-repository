@@ -32,7 +32,7 @@ Edit the 'template-repository/conf/application.conf' file:
 * by default uses embedded filesystem database (db=fs)
 ** db: database connection. (db=mysql:root:root@templaterepository)
 ** also use ''jpa.ddl=create'' for the first run
-
+* ovfcatalog.repositoryName : remote repository name when adding to abiquo
 
 You can also change the binding port (http.port=9000)
 

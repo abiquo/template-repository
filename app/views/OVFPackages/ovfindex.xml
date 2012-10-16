@@ -5,7 +5,7 @@
 	xmlns:ns2="http://www.abiquo.com/appliancemanager/repositoryspace" xmlns:ns1="http://schemas.dmtf.org/ovf/envelope/1"
 
 	ns2:RepositoryURI="@@{OVFPackages.ovfindex}"
-	ns2:RepositoryName="playrepo">
+	ns2:RepositoryName="${play.configuration.getProperty("ovfcatalog.repositoryName")}">
 
 #{list ovfpackages, as:'ovfpackage'}
 	 <ns2:OVFDescription 			
