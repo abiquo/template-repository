@@ -80,16 +80,16 @@ public class OVFPackages extends CRUD
         {
             response.status = 500;
             renderText("path already exists" + object.diskFilePath);
+            diskFile.delete();
             return;
         }
 
-        Future<String> copy = movingTheDiskIsAnExpensiveOperation(object, diskFile);
-
-        final String moveError = await(copy);
-        if (!StringUtils.isEmpty(moveError))
+        play.Logger.info("Moving to %s", object.diskFilePath);
+        if (!diskFile.renameTo(new File(object.diskFilePath)))
         {
             response.status = 500;
-            renderText("Can't save the file in the repository filesystem : " + moveError);
+            renderText("Can't save the file in the repository filesystem at : " + object.diskFilePath);
+            diskFile.delete();
             return;
         }
 
@@ -183,40 +183,6 @@ public class OVFPackages extends CRUD
             return true;
         }
         return false;
-    }
-
-    private static Future<String> movingTheDiskIsAnExpensiveOperation(final OVFPackage object,
-        final File uploaded)
-    {
-
-        return JobsPlugin.executor.submit(new Callable<String>()
-        {
-            @Override
-            public String call() throws Exception
-            {
-                play.Logger.info("Moving to %s", object.diskFilePath);
-                try
-                {
-                    FileUtils.copyFile(uploaded, new File(object.diskFilePath));
-                    return null;
-                }
-                catch (IOException e)
-                {
-                    play.Logger.error(e, "Template %s FAIL ", object.name);
-
-                    try
-                    {
-                        new File(object.diskFilePath).delete();
-                    }
-                    catch (Exception ed)
-                    {
-                        ed.printStackTrace();
-                    }
-
-                    return e.getMessage();
-                }
-            }
-        });
     }
 
     private static void applyDiskId(final OVFPackage object, final DiskId diskId)
