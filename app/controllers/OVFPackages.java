@@ -246,9 +246,23 @@ public class OVFPackages extends CRUD
         {
             try
             {
-                File diskFile = new File(getRepositoryLocation() + object.diskFilePath);
-                diskFile.delete();
-
+                File diskFile = new File(object.diskFilePath);
+                if (!diskFile.exists())
+                {
+                    play.Logger
+                        .warn("file : %s was not found during deletion", object.diskFilePath);
+                }
+                else
+                {
+                    if (!diskFile.delete())
+                    {
+                        play.Logger.error("file : %s can't be deleted", object.diskFilePath);
+                    }
+                    else
+                    {
+                        play.Logger.error("file : %s deleted", object.diskFilePath);
+                    }
+                }
             }
             catch (Exception e)
             {
