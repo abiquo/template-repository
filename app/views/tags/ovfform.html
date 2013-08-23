@@ -26,7 +26,7 @@
 			 
 			
 			<label for="object_categoryName">Category</label>
-			<input id="object_categoryName" class="" type="text" name="object.categoryName" value="${_object.categoryName}" size="50"/>
+			<input id="object_categoryName" class="" type="text" name="object.categoryName" value="${_object.categoryName}" size="50" data-provide="typeahead" data-items="4" autocomplete="off" />
 			#{ifError 'object.categoryName'}
 				<span class="alert alert-error">#{error 'object.categoryName' /}</span>			 		
 			#{/ifError}
@@ -298,6 +298,12 @@
 	<input id="object_hdInBytes" type="text" name="object.hdInBytes" value="${_object.hdInBytes}" size="5" />
 	<span class="crudHelp"> </span>
 </div>
+
+
+<script>
+ var subjects = "${_object.allCategories().join(",")}".split(",")
+ $('#object_categoryName').typeahead({minLength: 0, source: subjects})
+</script>
 
 
 <!-- 
