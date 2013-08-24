@@ -1,14 +1,13 @@
 package models;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Query;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.io.FilenameUtils;
@@ -16,10 +15,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
-import play.data.parsing.UrlEncodedParser;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.data.validation.Unique;
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
 import play.libs.Codec;
 import play.mvc.Router;
@@ -107,7 +106,6 @@ public class OVFPackage extends Model
     @Unique
     @MaxSize(256)
     public String nameUrl;
-    
 
     public void setTemplateVersion(final Integer templateVersion)
     {
@@ -269,6 +267,12 @@ public class OVFPackage extends Model
 		return diskFilePath == null ? "" : 
 		    URLEncoder.encode(FilenameUtils.getName(diskFilePath), "UTF-8")
 				.replace("+", "%20"); // application/x-www-form-urlencoded
+    }
+    
+    public static List<String> allCategories()
+    {
+        Query query = JPA.em().createQuery("select distinct categoryName from OVFPackage");
+        return (List<String>) query.getResultList();
     }
 
     public OVFPackage()
